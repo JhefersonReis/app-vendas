@@ -1,12 +1,12 @@
 import 'package:drift/drift.dart';
 import 'package:organik_vendas/src/app/database/database.dart';
-import 'package:organik_vendas/src/features/products/data/products_repository.dart';
+import 'package:organik_vendas/src/features/products/data/product_repository.dart';
 import 'package:organik_vendas/src/features/products/domain/product_model.dart';
 
-class ProductsRepositoryImpl implements ProductsRepository {
+class ProductRepositoryImpl implements ProductRepository {
   final Database _database;
 
-  ProductsRepositoryImpl({required Database database}) : _database = database;
+  ProductRepositoryImpl({required Database database}) : _database = database;
 
   @override
   Future<ProductModel> create(ProductModel product) async {
@@ -28,9 +28,7 @@ class ProductsRepositoryImpl implements ProductsRepository {
 
   @override
   Future<void> delete(int id) async {
-    await (_database.delete(
-      _database.products,
-    )..where((tbl) => tbl.id.equals(id))).go();
+    await (_database.delete(_database.products)..where((tbl) => tbl.id.equals(id))).go();
   }
 
   @override
@@ -54,9 +52,7 @@ class ProductsRepositoryImpl implements ProductsRepository {
 
   @override
   Future<ProductModel> findById(int id) async {
-    final product = await (_database.select(
-      _database.products,
-    )..where((tbl) => tbl.id.equals(id))).getSingle();
+    final product = await (_database.select(_database.products)..where((tbl) => tbl.id.equals(id))).getSingle();
 
     return ProductModel(
       id: product.id,
@@ -71,9 +67,7 @@ class ProductsRepositoryImpl implements ProductsRepository {
 
   @override
   Future<ProductModel> update(ProductModel product) async {
-    await (_database.update(
-      _database.products,
-    )..where((tbl) => tbl.id.equals(product.id))).write(
+    await (_database.update(_database.products)..where((tbl) => tbl.id.equals(product.id))).write(
       ProductsCompanion(
         name: Value(product.name),
         price: Value(product.price),

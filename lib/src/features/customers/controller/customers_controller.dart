@@ -1,24 +1,20 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:organik_vendas/src/features/customers/domain/customer_model.dart';
 import 'package:organik_vendas/src/features/customers/domain/customers_service.dart';
-import 'package:organik_vendas/src/app/providers/customers_providers.dart';
+import 'package:organik_vendas/src/app/providers/providers.dart';
 
-final customersControllerProvider =
-    StateNotifierProvider<CustomersController, AsyncValue<List<CustomerModel>>>(
-      (ref) => CustomersController(service: ref.read(customersServiceProvider)),
-    );
+final customersControllerProvider = StateNotifierProvider<CustomersController, AsyncValue<List<CustomerModel>>>(
+  (ref) => CustomersController(service: ref.read(customersServiceProvider)),
+);
 
 final customerByIdProvider = FutureProvider.family<CustomerModel, int>(
   (ref, id) => ref.read(customersServiceProvider).findById(id),
 );
 
-class CustomersController
-    extends StateNotifier<AsyncValue<List<CustomerModel>>> {
+class CustomersController extends StateNotifier<AsyncValue<List<CustomerModel>>> {
   final CustomersService _service;
 
-  CustomersController({required CustomersService service})
-    : _service = service,
-      super(const AsyncLoading()) {
+  CustomersController({required CustomersService service}) : _service = service, super(const AsyncLoading()) {
     loadCustomers();
   }
 
@@ -37,12 +33,7 @@ class CustomersController
     required String phone,
     String? observation,
   }) async {
-    final newCustomer = await _service.create(
-      name: name,
-      address: address,
-      phone: phone,
-      observation: observation,
-    );
+    final newCustomer = await _service.create(name: name, address: address, phone: phone, observation: observation);
 
     final current = state.valueOrNull ?? [];
     state = AsyncData([...current, newCustomer]);

@@ -6,19 +6,19 @@ abstract interface class ProductService {
   Future<ProductModel> create({
     required String name,
     required String description,
-    required String category,
-    required String image,
+    required double weight,
+    required String weightUnit,
     required double price,
-    required int quantity,
+    required DateTime createdAt,
   });
   Future<ProductModel> update({
     required int id,
     required String name,
     required String description,
-    required String category,
-    required String image,
+    required double weight,
+    required String weightUnit,
     required double price,
-    required int quantity,
+    required DateTime createdAt,
   });
   Future<void> delete(int id);
 }

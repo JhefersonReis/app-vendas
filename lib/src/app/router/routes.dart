@@ -4,6 +4,7 @@ import 'package:organik_vendas/src/features/customers/view/customers_form_page.d
 import 'package:organik_vendas/src/features/customers/view/customers_page.dart';
 import 'package:organik_vendas/src/features/home/view/home_page.dart';
 import 'package:organik_vendas/src/features/main/view/main_page.dart';
+import 'package:organik_vendas/src/features/products/view/product_form_page.dart';
 import 'package:organik_vendas/src/features/products/view/products_page.dart';
 import 'package:organik_vendas/src/features/reports/view/reports_page.dart';
 import 'package:organik_vendas/src/features/sales/view/sales_page.dart';
@@ -66,6 +67,16 @@ class Routes {
                 builder: (context, state) {
                   return const ProductsPage();
                 },
+                routes: [
+                  GoRoute(
+                    path: '/form',
+                    name: "ProductForm",
+                    builder: (context, state) {
+                      final String? productId = state.uri.queryParameters['id'];
+                      return ProductFormPage(id: productId);
+                    },
+                  ),
+                ],
               ),
             ],
           ),
@@ -83,8 +94,7 @@ class Routes {
                     path: '/form',
                     name: "CustomerForm",
                     builder: (context, state) {
-                      final String? customerId =
-                          state.uri.queryParameters['id'];
+                      final String? customerId = state.uri.queryParameters['id'];
                       return CustomersFormPage(id: customerId);
                     },
                   ),
