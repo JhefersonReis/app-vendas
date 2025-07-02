@@ -1,0 +1,13 @@
+import 'package:drift/drift.dart';
+import 'package:organik_vendas/src/app/database/converters/item_converter.dart';
+
+class Sales extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get customerId => integer()();
+  TextColumn get customerName => text()();
+  DateTimeColumn get saleDate => dateTime()();
+  TextColumn get items => text().map(const ItemModelConverter())();
+  RealColumn get total => real()();
+  BoolColumn get isPaid => boolean()();
+  DateTimeColumn get createdAt => dateTime()();
+}
