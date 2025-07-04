@@ -9,5 +9,6 @@ class Sales extends Table {
   TextColumn get items => text().map(const ItemModelConverter())();
   RealColumn get total => real()();
   BoolColumn get isPaid => boolean()();
+  TextColumn get observation => text().nullable()();
   DateTimeColumn get createdAt => dateTime()();
 }

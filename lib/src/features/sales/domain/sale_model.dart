@@ -8,6 +8,7 @@ class SaleModel {
   List<ItemModel> items;
   double total;
   bool isPaid;
+  String? observation;
   DateTime createdAt;
 
   SaleModel({
@@ -18,6 +19,7 @@ class SaleModel {
     required this.items,
     required this.total,
     required this.isPaid,
+    this.observation,
     required this.createdAt,
   });
 
@@ -30,6 +32,7 @@ class SaleModel {
       'items': items.map((item) => item.toJson()).toList(),
       'total': total,
       'is_paid': isPaid ? 1 : 0,
+      'observation': observation,
       'created_at': createdAt.toIso8601String(),
     };
   }
@@ -40,12 +43,35 @@ class SaleModel {
       customerId: json['customer_id'],
       customerName: json['customer_name'],
       saleDate: DateTime.parse(json['sale_date']),
-      items: (json['items'] as List)
-          .map((item) => ItemModel.fromJson(item))
-          .toList(),
+      items: (json['items'] as List).map((item) => ItemModel.fromJson(item)).toList(),
       total: json['total'],
       isPaid: json['is_paid'] == 1,
+      observation: json['observation'],
       createdAt: DateTime.parse(json['created_at']),
+    );
+  }
+
+  copyWith({
+    int? id,
+    int? customerId,
+    String? customerName,
+    DateTime? saleDate,
+    List<ItemModel>? items,
+    double? total,
+    bool? isPaid,
+    String? observation,
+    DateTime? createdAt,
+  }) {
+    return SaleModel(
+      id: id ?? this.id,
+      customerId: customerId ?? this.customerId,
+      customerName: customerName ?? this.customerName,
+      saleDate: saleDate ?? this.saleDate,
+      items: items ?? this.items,
+      total: total ?? this.total,
+      isPaid: isPaid ?? this.isPaid,
+      observation: observation ?? this.observation,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 }

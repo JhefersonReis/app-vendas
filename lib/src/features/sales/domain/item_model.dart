@@ -1,9 +1,11 @@
 class ItemModel {
   int productId;
   String productName;
-  double quantity;
+  int quantity;
   double unitPrice;
   double totalPrice;
+  double weight;
+  String weightUnit;
 
   ItemModel({
     required this.productId,
@@ -11,6 +13,8 @@ class ItemModel {
     required this.quantity,
     required this.unitPrice,
     required this.totalPrice,
+    required this.weight,
+    required this.weightUnit,
   });
 
   factory ItemModel.fromJson(Map<String, dynamic> json) {
@@ -20,6 +24,8 @@ class ItemModel {
       quantity: json['quantity'],
       unitPrice: json['unitPrice'],
       totalPrice: json['totalPrice'],
+      weight: json['weight'],
+      weightUnit: json['weightUnit'],
     );
   }
 
@@ -30,6 +36,28 @@ class ItemModel {
       'quantity': quantity,
       'unitPrice': unitPrice,
       'totalPrice': totalPrice,
+      'weight': weight,
+      'weightUnit': weightUnit,
     };
+  }
+
+  copyWith({
+    int? productId,
+    String? productName,
+    int? quantity,
+    double? unitPrice,
+    double? totalPrice,
+    double? weight,
+    String? weightUnit,
+  }) {
+    return ItemModel(
+      productId: productId ?? this.productId,
+      productName: productName ?? this.productName,
+      quantity: quantity ?? this.quantity,
+      unitPrice: unitPrice ?? this.unitPrice,
+      totalPrice: totalPrice ?? this.totalPrice,
+      weight: weight ?? this.weight,
+      weightUnit: weightUnit ?? this.weightUnit,
+    );
   }
 }

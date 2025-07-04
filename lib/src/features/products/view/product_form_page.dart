@@ -65,6 +65,8 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
             description: productDescription.text,
             createdAt: product.createdAt,
           );
+
+      ref.invalidate(productByIdProvider(int.parse(widget.id!)));
     } else {
       await ref
           .read(productsControllerProvider.notifier)

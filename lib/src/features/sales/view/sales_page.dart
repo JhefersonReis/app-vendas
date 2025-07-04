@@ -1,51 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:organik_vendas/src/features/sales/controller/sales_controller.dart';
+import 'package:organik_vendas/src/features/sales/domain/sale_model.dart';
 
-class Venda {
-  final String cliente;
-  final DateTime data;
-  final double valor;
-  final String status;
-  final int quantidadeItens;
-  final int quantidadeProdutos;
-
-  Venda({
-    required this.cliente,
-    required this.data,
-    required this.valor,
-    required this.status,
-    required this.quantidadeItens,
-    required this.quantidadeProdutos,
-  });
-}
-
-class SalesPage extends StatefulWidget {
+class SalesPage extends ConsumerWidget {
   const SalesPage({super.key});
 
   @override
-  State<SalesPage> createState() => _SalesPageState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final sales = ref.watch(salesControllerProvider);
 
-class _SalesPageState extends State<SalesPage> {
-  final List<Venda> vendas =
-      []; // Inicialmente vazio, depois você pode testar adicionando uma venda aqui.
-
-  void adicionarVendaFake() {
-    setState(() {
-      vendas.add(
-        Venda(
-          cliente: 'dfgd',
-          data: DateTime.now(),
-          valor: 2.00,
-          status: 'Pendente',
-          quantidadeItens: 1,
-          quantidadeProdutos: 1,
-        ),
-      );
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -54,22 +20,24 @@ class _SalesPageState extends State<SalesPage> {
         ),
         centerTitle: true,
         backgroundColor: const Color(0xFF248f3d),
-        actions: [
-          IconButton(
-            onPressed:
-                adicionarVendaFake, // Só para simular o cadastro de uma venda
-            icon: const Icon(Icons.add, color: Colors.white),
-          ),
-        ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(12),
-        child: vendas.isEmpty ? _buildEmptyState() : _buildVendasList(),
+        padding: const EdgeInsets.all(16.0),
+        child: sales.when(
+          data: (saleList) => saleList.isEmpty ? _buildEmptyState(context) : _buildVendasList(saleList, context),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, s) => Center(child: Text('Erro ao carregar vendas: $e')),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.go('/sales/form'),
+        backgroundColor: const Color(0xFF248f3d),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(BuildContext context) {
     return Center(
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -78,26 +46,17 @@ class _SalesPageState extends State<SalesPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(
-                Icons.shopping_bag_outlined,
-                size: 50,
-                color: Colors.grey,
-              ),
+              const Icon(Icons.shopping_bag_outlined, size: 50, color: Colors.grey),
               const SizedBox(height: 10),
-              const Text(
-                'Nenhuma venda registrada',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
+              const Text('Nenhuma venda registrada', style: TextStyle(fontWeight: FontWeight.bold)),
               const Text('Comece registrando sua primeira venda'),
               const SizedBox(height: 10),
               ElevatedButton(
-                onPressed: adicionarVendaFake,
+                onPressed: () => context.go('/sales/form'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF248f3d),
                   foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 ),
                 child: const Text('Registrar Primeira Venda'),
               ),
@@ -108,85 +67,96 @@ class _SalesPageState extends State<SalesPage> {
     );
   }
 
-  Widget _buildVendasList() {
+  Widget _buildVendasList(List<SaleModel> vendas, BuildContext context) {
     return ListView.builder(
       itemCount: vendas.length,
       itemBuilder: (context, index) {
         final venda = vendas[index];
-        return Card(
-          margin: const EdgeInsets.only(bottom: 10),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        return Consumer(
+          builder: (context, ref, child) => GestureDetector(
+            onLongPress: () async {
+              await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Excluir Venda'),
+                    content: const Text('Tem certeza que deseja excluir esta venda?'),
+                    actions: [
+                      TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancelar')),
+                      TextButton(
+                        onPressed: () {
+                          ref.read(salesControllerProvider.notifier).delete(venda.id);
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('Excluir', style: TextStyle(color: Colors.red)),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            child: Card(
+              margin: const EdgeInsets.only(bottom: 10),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      children: const [
-                        Icon(Icons.person, size: 18, color: Colors.grey),
-                        SizedBox(width: 5),
-                        Text(
-                          'dfgd',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.person, size: 18, color: Colors.grey),
+                            const SizedBox(width: 5),
+                            Text(venda.customerName, style: const TextStyle(fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                        TextButton(
+                          onPressed: () => context.go('/sales/form?id=${venda.id}'),
+                          child: const Text('Ver Detalhes', style: TextStyle(color: Colors.green)),
                         ),
                       ],
                     ),
-                    TextButton(
-                      onPressed: () {},
-                      child: const Text(
-                        'Ver Detalhes',
-                        style: TextStyle(color: Colors.green),
-                      ),
+                    const SizedBox(height: 5),
+                    Row(
+                      children: [
+                        const Icon(Icons.calendar_today, size: 18, color: Colors.grey),
+                        const SizedBox(width: 5),
+                        Text(DateFormat('dd/MM/yyyy').format(venda.saleDate)),
+                      ],
                     ),
-                  ],
-                ),
-                const SizedBox(height: 5),
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.calendar_today,
-                      size: 18,
-                      color: Colors.grey,
+                    const SizedBox(height: 5),
+                    Row(
+                      children: [
+                        const Icon(Icons.attach_money, size: 18, color: Colors.grey),
+                        const SizedBox(width: 5),
+                        Text('R\$ ${venda.total.toStringAsFixed(2)}', style: const TextStyle(color: Colors.green)),
+                      ],
                     ),
-                    const SizedBox(width: 5),
+                    const SizedBox(height: 5),
+                    Row(
+                      children: [
+                        Icon(
+                          venda.isPaid ? Icons.check_circle : Icons.warning,
+                          size: 18,
+                          color: venda.isPaid ? Colors.green : Colors.orange,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          venda.isPaid ? 'Pago' : 'Pendente',
+                          style: TextStyle(color: venda.isPaid ? Colors.green : Colors.orange),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 5),
                     Text(
-                      '${venda.data.day}/${venda.data.month}/${venda.data.year}',
+                      '${venda.items.length} item(s) - ${venda.items.fold(0, (int sum, item) => sum + item.quantity)} produto(s)',
                     ),
                   ],
                 ),
-                const SizedBox(height: 5),
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.attach_money,
-                      size: 18,
-                      color: Colors.grey,
-                    ),
-                    const SizedBox(width: 5),
-                    Text(
-                      'R\$ ${venda.valor.toStringAsFixed(2)}',
-                      style: const TextStyle(color: Colors.green),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 5),
-                Row(
-                  children: const [
-                    Icon(Icons.warning, size: 18, color: Colors.orange),
-                    SizedBox(width: 5),
-                    Text('Pendente', style: TextStyle(color: Colors.orange)),
-                  ],
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  '${venda.quantidadeItens} item(s) • ${venda.quantidadeProdutos} produtos',
-                ),
-              ],
+              ),
             ),
           ),
         );

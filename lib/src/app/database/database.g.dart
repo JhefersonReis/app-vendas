@@ -933,6 +933,17 @@ class $SalesTable extends Sales with TableInfo<$SalesTable, Sale> {
       'CHECK ("is_paid" IN (0, 1))',
     ),
   );
+  static const VerificationMeta _observationMeta = const VerificationMeta(
+    'observation',
+  );
+  @override
+  late final GeneratedColumn<String> observation = GeneratedColumn<String>(
+    'observation',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -953,6 +964,7 @@ class $SalesTable extends Sales with TableInfo<$SalesTable, Sale> {
     items,
     total,
     isPaid,
+    observation,
     createdAt,
   ];
   @override
@@ -1013,6 +1025,15 @@ class $SalesTable extends Sales with TableInfo<$SalesTable, Sale> {
     } else if (isInserting) {
       context.missing(_isPaidMeta);
     }
+    if (data.containsKey('observation')) {
+      context.handle(
+        _observationMeta,
+        observation.isAcceptableOrUnknown(
+          data['observation']!,
+          _observationMeta,
+        ),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -1060,6 +1081,10 @@ class $SalesTable extends Sales with TableInfo<$SalesTable, Sale> {
         DriftSqlType.bool,
         data['${effectivePrefix}is_paid'],
       )!,
+      observation: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}observation'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -1084,6 +1109,7 @@ class Sale extends DataClass implements Insertable<Sale> {
   final List<ItemModel> items;
   final double total;
   final bool isPaid;
+  final String? observation;
   final DateTime createdAt;
   const Sale({
     required this.id,
@@ -1093,6 +1119,7 @@ class Sale extends DataClass implements Insertable<Sale> {
     required this.items,
     required this.total,
     required this.isPaid,
+    this.observation,
     required this.createdAt,
   });
   @override
@@ -1107,6 +1134,9 @@ class Sale extends DataClass implements Insertable<Sale> {
     }
     map['total'] = Variable<double>(total);
     map['is_paid'] = Variable<bool>(isPaid);
+    if (!nullToAbsent || observation != null) {
+      map['observation'] = Variable<String>(observation);
+    }
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
@@ -1120,6 +1150,9 @@ class Sale extends DataClass implements Insertable<Sale> {
       items: Value(items),
       total: Value(total),
       isPaid: Value(isPaid),
+      observation: observation == null && nullToAbsent
+          ? const Value.absent()
+          : Value(observation),
       createdAt: Value(createdAt),
     );
   }
@@ -1137,6 +1170,7 @@ class Sale extends DataClass implements Insertable<Sale> {
       items: serializer.fromJson<List<ItemModel>>(json['items']),
       total: serializer.fromJson<double>(json['total']),
       isPaid: serializer.fromJson<bool>(json['isPaid']),
+      observation: serializer.fromJson<String?>(json['observation']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -1151,6 +1185,7 @@ class Sale extends DataClass implements Insertable<Sale> {
       'items': serializer.toJson<List<ItemModel>>(items),
       'total': serializer.toJson<double>(total),
       'isPaid': serializer.toJson<bool>(isPaid),
+      'observation': serializer.toJson<String?>(observation),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
@@ -1163,6 +1198,7 @@ class Sale extends DataClass implements Insertable<Sale> {
     List<ItemModel>? items,
     double? total,
     bool? isPaid,
+    Value<String?> observation = const Value.absent(),
     DateTime? createdAt,
   }) => Sale(
     id: id ?? this.id,
@@ -1172,6 +1208,7 @@ class Sale extends DataClass implements Insertable<Sale> {
     items: items ?? this.items,
     total: total ?? this.total,
     isPaid: isPaid ?? this.isPaid,
+    observation: observation.present ? observation.value : this.observation,
     createdAt: createdAt ?? this.createdAt,
   );
   Sale copyWithCompanion(SalesCompanion data) {
@@ -1187,6 +1224,9 @@ class Sale extends DataClass implements Insertable<Sale> {
       items: data.items.present ? data.items.value : this.items,
       total: data.total.present ? data.total.value : this.total,
       isPaid: data.isPaid.present ? data.isPaid.value : this.isPaid,
+      observation: data.observation.present
+          ? data.observation.value
+          : this.observation,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -1201,6 +1241,7 @@ class Sale extends DataClass implements Insertable<Sale> {
           ..write('items: $items, ')
           ..write('total: $total, ')
           ..write('isPaid: $isPaid, ')
+          ..write('observation: $observation, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -1215,6 +1256,7 @@ class Sale extends DataClass implements Insertable<Sale> {
     items,
     total,
     isPaid,
+    observation,
     createdAt,
   );
   @override
@@ -1228,6 +1270,7 @@ class Sale extends DataClass implements Insertable<Sale> {
           other.items == this.items &&
           other.total == this.total &&
           other.isPaid == this.isPaid &&
+          other.observation == this.observation &&
           other.createdAt == this.createdAt);
 }
 
@@ -1239,6 +1282,7 @@ class SalesCompanion extends UpdateCompanion<Sale> {
   final Value<List<ItemModel>> items;
   final Value<double> total;
   final Value<bool> isPaid;
+  final Value<String?> observation;
   final Value<DateTime> createdAt;
   const SalesCompanion({
     this.id = const Value.absent(),
@@ -1248,6 +1292,7 @@ class SalesCompanion extends UpdateCompanion<Sale> {
     this.items = const Value.absent(),
     this.total = const Value.absent(),
     this.isPaid = const Value.absent(),
+    this.observation = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
   SalesCompanion.insert({
@@ -1258,6 +1303,7 @@ class SalesCompanion extends UpdateCompanion<Sale> {
     required List<ItemModel> items,
     required double total,
     required bool isPaid,
+    this.observation = const Value.absent(),
     required DateTime createdAt,
   }) : customerId = Value(customerId),
        customerName = Value(customerName),
@@ -1274,6 +1320,7 @@ class SalesCompanion extends UpdateCompanion<Sale> {
     Expression<String>? items,
     Expression<double>? total,
     Expression<bool>? isPaid,
+    Expression<String>? observation,
     Expression<DateTime>? createdAt,
   }) {
     return RawValuesInsertable({
@@ -1284,6 +1331,7 @@ class SalesCompanion extends UpdateCompanion<Sale> {
       if (items != null) 'items': items,
       if (total != null) 'total': total,
       if (isPaid != null) 'is_paid': isPaid,
+      if (observation != null) 'observation': observation,
       if (createdAt != null) 'created_at': createdAt,
     });
   }
@@ -1296,6 +1344,7 @@ class SalesCompanion extends UpdateCompanion<Sale> {
     Value<List<ItemModel>>? items,
     Value<double>? total,
     Value<bool>? isPaid,
+    Value<String?>? observation,
     Value<DateTime>? createdAt,
   }) {
     return SalesCompanion(
@@ -1306,6 +1355,7 @@ class SalesCompanion extends UpdateCompanion<Sale> {
       items: items ?? this.items,
       total: total ?? this.total,
       isPaid: isPaid ?? this.isPaid,
+      observation: observation ?? this.observation,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -1336,6 +1386,9 @@ class SalesCompanion extends UpdateCompanion<Sale> {
     if (isPaid.present) {
       map['is_paid'] = Variable<bool>(isPaid.value);
     }
+    if (observation.present) {
+      map['observation'] = Variable<String>(observation.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -1352,6 +1405,7 @@ class SalesCompanion extends UpdateCompanion<Sale> {
           ..write('items: $items, ')
           ..write('total: $total, ')
           ..write('isPaid: $isPaid, ')
+          ..write('observation: $observation, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -1823,6 +1877,7 @@ typedef $$SalesTableCreateCompanionBuilder =
       required List<ItemModel> items,
       required double total,
       required bool isPaid,
+      Value<String?> observation,
       required DateTime createdAt,
     });
 typedef $$SalesTableUpdateCompanionBuilder =
@@ -1834,6 +1889,7 @@ typedef $$SalesTableUpdateCompanionBuilder =
       Value<List<ItemModel>> items,
       Value<double> total,
       Value<bool> isPaid,
+      Value<String?> observation,
       Value<DateTime> createdAt,
     });
 
@@ -1878,6 +1934,11 @@ class $$SalesTableFilterComposer extends Composer<_$Database, $SalesTable> {
 
   ColumnFilters<bool> get isPaid => $composableBuilder(
     column: $table.isPaid,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get observation => $composableBuilder(
+    column: $table.observation,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1930,6 +1991,11 @@ class $$SalesTableOrderingComposer extends Composer<_$Database, $SalesTable> {
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get observation => $composableBuilder(
+    column: $table.observation,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -1968,6 +2034,11 @@ class $$SalesTableAnnotationComposer extends Composer<_$Database, $SalesTable> {
 
   GeneratedColumn<bool> get isPaid =>
       $composableBuilder(column: $table.isPaid, builder: (column) => column);
+
+  GeneratedColumn<String> get observation => $composableBuilder(
+    column: $table.observation,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -2008,6 +2079,7 @@ class $$SalesTableTableManager
                 Value<List<ItemModel>> items = const Value.absent(),
                 Value<double> total = const Value.absent(),
                 Value<bool> isPaid = const Value.absent(),
+                Value<String?> observation = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => SalesCompanion(
                 id: id,
@@ -2017,6 +2089,7 @@ class $$SalesTableTableManager
                 items: items,
                 total: total,
                 isPaid: isPaid,
+                observation: observation,
                 createdAt: createdAt,
               ),
           createCompanionCallback:
@@ -2028,6 +2101,7 @@ class $$SalesTableTableManager
                 required List<ItemModel> items,
                 required double total,
                 required bool isPaid,
+                Value<String?> observation = const Value.absent(),
                 required DateTime createdAt,
               }) => SalesCompanion.insert(
                 id: id,
@@ -2037,6 +2111,7 @@ class $$SalesTableTableManager
                 items: items,
                 total: total,
                 isPaid: isPaid,
+                observation: observation,
                 createdAt: createdAt,
               ),
           withReferenceMapper: (p0) => p0

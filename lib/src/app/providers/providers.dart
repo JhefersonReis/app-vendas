@@ -9,6 +9,13 @@ import 'package:organik_vendas/src/features/products/data/product_repository_imp
 import 'package:organik_vendas/src/features/products/domain/product_service.dart';
 import 'package:organik_vendas/src/features/products/domain/product_service_impl.dart';
 
+import 'package:organik_vendas/src/features/sales/controller/sales_controller.dart';
+import 'package:organik_vendas/src/features/sales/data/sales_repository.dart';
+import 'package:organik_vendas/src/features/sales/data/sales_repository_impl.dart';
+import 'package:organik_vendas/src/features/sales/domain/sale_model.dart';
+import 'package:organik_vendas/src/features/sales/domain/sales_service.dart';
+import 'package:organik_vendas/src/features/sales/domain/sales_service_impl.dart';
+
 // Database provider
 final databaseProvider = Provider<Database>((ref) => Database());
 
@@ -26,4 +33,15 @@ final productRepositoryProvider = Provider<ProductRepository>(
 );
 final productServiceProvider = Provider<ProductService>(
   (ref) => ProductServiceImpl(productsRepository: ref.read(productRepositoryProvider)),
+);
+
+// Sales provider
+final salesRepositoryProvider = Provider<SalesRepository>(
+  (ref) => SalesRepositoryImpl(database: ref.read(databaseProvider)),
+);
+
+final salesServiceProvider = Provider<SalesService>((ref) => SalesServiceImpl(ref.read(salesRepositoryProvider)));
+
+final salesControllerProvider = StateNotifierProvider<SalesController, AsyncValue<List<SaleModel>>>(
+  (ref) => SalesController(ref.read(salesServiceProvider)),
 );

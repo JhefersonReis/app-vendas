@@ -5,8 +5,7 @@ import 'package:organik_vendas/src/features/customers/domain/customers_service.d
 class CustomersServiceImpl implements CustomersService {
   final CustomersRepository _customersRepository;
 
-  CustomersServiceImpl({required CustomersRepository customersRepository})
-    : _customersRepository = customersRepository;
+  CustomersServiceImpl({required CustomersRepository customersRepository}) : _customersRepository = customersRepository;
 
   @override
   Future<CustomerModel> create({
@@ -24,7 +23,7 @@ class CustomersServiceImpl implements CustomersService {
       createdAt: DateTime.now(),
     );
 
-    return _customersRepository.create(customer);
+    return await _customersRepository.create(customer);
   }
 
   @override
@@ -54,6 +53,6 @@ class CustomersServiceImpl implements CustomersService {
       createdAt: createdAt,
     );
 
-    return _customersRepository.update(customer);
+    return await _customersRepository.update(customer);
   }
 }

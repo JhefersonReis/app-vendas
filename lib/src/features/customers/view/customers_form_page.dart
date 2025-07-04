@@ -47,9 +47,7 @@ class _CustomersFormPageState extends ConsumerState<CustomersFormPage> {
 
   Future<void> _saveCustomer() async {
     if (widget.id != null) {
-      final customer = await ref.read(
-        customerByIdProvider(int.parse(widget.id!)).future,
-      );
+      final customer = await ref.read(customerByIdProvider(int.parse(widget.id!)).future);
 
       await ref
           .read(customersControllerProvider.notifier)
@@ -61,6 +59,7 @@ class _CustomersFormPageState extends ConsumerState<CustomersFormPage> {
             observation: _observationController.text,
             createdAt: customer.createdAt,
           );
+      ref.invalidate(customerByIdProvider(int.parse(widget.id!)));
     } else {
       await ref
           .read(customersControllerProvider.notifier)
@@ -80,10 +79,7 @@ class _CustomersFormPageState extends ConsumerState<CustomersFormPage> {
       appBar: AppBar(
         title: Text(
           widget.id != null ? "Editar Cliente" : "Novo Cliente",
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         backgroundColor: const Color(0xFF248f3d),
@@ -181,9 +177,7 @@ class _CustomersFormPageState extends ConsumerState<CustomersFormPage> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF248f3d),
                 minimumSize: const Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
               onPressed: _saveCustomer,
               child: Text(
