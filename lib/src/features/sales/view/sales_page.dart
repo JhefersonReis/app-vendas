@@ -24,7 +24,7 @@ class SalesPage extends ConsumerWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: sales.when(
-          data: (saleList) => saleList.isEmpty ? _buildEmptyState(context) : _buildVendasList(saleList, context),
+          data: (saleList) => saleList.isEmpty ? _buildEmptyState(context) : _buildVendasList(saleList, ref),
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (e, s) => Center(child: Text('Erro ao carregar vendas: $e')),
         ),
@@ -67,94 +67,128 @@ class SalesPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildVendasList(List<SaleModel> vendas, BuildContext context) {
+  Widget _buildVendasList(List<SaleModel> vendas, WidgetRef ref) {
     return ListView.builder(
       itemCount: vendas.length,
       itemBuilder: (context, index) {
         final venda = vendas[index];
-        return Consumer(
-          builder: (context, ref, child) => GestureDetector(
-            onLongPress: () async {
-              await showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('Excluir Venda'),
-                    content: const Text('Tem certeza que deseja excluir esta venda?'),
-                    actions: [
-                      TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancelar')),
-                      TextButton(
-                        onPressed: () {
-                          ref.read(salesControllerProvider.notifier).delete(venda.id);
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Excluir', style: TextStyle(color: Colors.red)),
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
-            child: Card(
-              margin: const EdgeInsets.only(bottom: 10),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            const Icon(Icons.person, size: 18, color: Colors.grey),
-                            const SizedBox(width: 5),
-                            Text(venda.customerName, style: const TextStyle(fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                        TextButton(
-                          onPressed: () => context.go('/sales/form?id=${venda.id}'),
-                          child: const Text('Ver Detalhes', style: TextStyle(color: Colors.green)),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 5),
-                    Row(
-                      children: [
-                        const Icon(Icons.calendar_today, size: 18, color: Colors.grey),
-                        const SizedBox(width: 5),
-                        Text(DateFormat('dd/MM/yyyy').format(venda.saleDate)),
-                      ],
-                    ),
-                    const SizedBox(height: 5),
-                    Row(
-                      children: [
-                        const Icon(Icons.attach_money, size: 18, color: Colors.grey),
-                        const SizedBox(width: 5),
-                        Text('R\$ ${venda.total.toStringAsFixed(2)}', style: const TextStyle(color: Colors.green)),
-                      ],
-                    ),
-                    const SizedBox(height: 5),
-                    Row(
-                      children: [
-                        Icon(
-                          venda.isPaid ? Icons.check_circle : Icons.warning,
-                          size: 18,
-                          color: venda.isPaid ? Colors.green : Colors.orange,
-                        ),
-                        const SizedBox(width: 5),
-                        Text(
-                          venda.isPaid ? 'Pago' : 'Pendente',
-                          style: TextStyle(color: venda.isPaid ? Colors.green : Colors.orange),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      '${venda.items.length} item(s) - ${venda.items.fold(0, (int sum, item) => sum + item.quantity)} produto(s)',
+        return Dismissible(
+          key: Key(venda.id.toString()),
+          direction: DismissDirection.endToStart,
+          background: Container(
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.only(right: 20),
+            color: Colors.red,
+            child: const Icon(Icons.delete, color: Colors.white),
+          ),
+          onDismissed: (_) {
+            ref.read(salesControllerProvider.notifier).delete(venda.id);
+          },
+          confirmDismiss: (direction) async {
+            return await showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('Excluir Venda'),
+                  content: const Text('Tem certeza que deseja excluir esta venda?'),
+                  actions: [
+                    TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancelar')),
+                    TextButton(
+                      onPressed: () {
+                        ref.read(salesControllerProvider.notifier).delete(venda.id);
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Excluir', style: TextStyle(color: Colors.red)),
                     ),
                   ],
+                );
+              },
+            );
+          },
+          child: Consumer(
+            builder: (context, ref, child) => GestureDetector(
+              onLongPress: () async {
+                await showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Excluir Venda'),
+                      content: const Text('Tem certeza que deseja excluir esta venda?'),
+                      actions: [
+                        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancelar')),
+                        TextButton(
+                          onPressed: () {
+                            ref.read(salesControllerProvider.notifier).delete(venda.id);
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('Excluir', style: TextStyle(color: Colors.red)),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: Card(
+                margin: const EdgeInsets.only(bottom: 10),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(Icons.person, size: 18, color: Colors.grey),
+                              const SizedBox(width: 5),
+                              Text(venda.customerName, style: const TextStyle(fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                          TextButton(
+                            onPressed: () => context.go('/sales/form?id=${venda.id}'),
+                            child: const Text('Ver Detalhes', style: TextStyle(color: Colors.green)),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      Row(
+                        children: [
+                          const Icon(Icons.calendar_today, size: 18, color: Colors.grey),
+                          const SizedBox(width: 5),
+                          Text(DateFormat('dd/MM/yyyy').format(venda.saleDate)),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      Row(
+                        children: [
+                          const Icon(Icons.attach_money, size: 18, color: Colors.grey),
+                          const SizedBox(width: 5),
+                          Text('R\$ ${venda.total.toStringAsFixed(2)}', style: const TextStyle(color: Colors.green)),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      Row(
+                        children: [
+                          Icon(
+                            venda.isPaid ? Icons.check_circle : Icons.warning,
+                            size: 18,
+                            color: venda.isPaid ? Colors.green : Colors.orange,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            venda.isPaid ? 'Pago' : 'Pendente',
+                            style: TextStyle(color: venda.isPaid ? Colors.green : Colors.orange),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        '${venda.items.length} item(s) - ${venda.items.fold(0, (int sum, item) => sum + item.quantity)} produto(s)',
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

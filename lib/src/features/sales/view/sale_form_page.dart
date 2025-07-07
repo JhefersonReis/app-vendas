@@ -187,8 +187,27 @@ class _SaleFormState extends ConsumerState<_SaleForm> {
                       _selectedCustomerId = value;
                     });
                   },
-                  items: customerList.map((c) => DropdownMenuItem(value: c.id, child: Text(c.name))).toList(),
+                  items: customerList
+                      .map(
+                        (c) => DropdownMenuItem(
+                          value: c.id,
+                          child: Text(c.name, maxLines: 1, overflow: TextOverflow.ellipsis),
+                        ),
+                      )
+                      .toList(),
                   decoration: const InputDecoration(border: OutlineInputBorder(), labelText: 'Selecione um cliente'),
+                  menuMaxHeight: 200,
+                  isExpanded: true,
+                  selectedItemBuilder: (BuildContext context) {
+                    final size = MediaQuery.of(context).size;
+
+                    return customerList.map<Widget>((customer) {
+                      return Container(
+                        constraints: BoxConstraints(maxWidth: size.width * 0.8),
+                        child: Text(customer.name, maxLines: 1, overflow: TextOverflow.ellipsis),
+                      );
+                    }).toList();
+                  },
                 ),
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (e, s) => const Center(child: Text('Erro ao carregar clientes')),
@@ -334,13 +353,36 @@ class _SaleFormState extends ConsumerState<_SaleForm> {
                   .map(
                     (product) => DropdownMenuItem(
                       value: product,
-                      child: Text(
-                        '${product.name} - ${product.weightUnit == 'g' ? product.weight.toStringAsFixed(0) : product.weight.toStringAsFixed(1)}${product.weightUnit}',
+                      child: Row(
+                        children: [
+                          product.name.length > 25
+                              ? Expanded(child: Text(product.name, overflow: TextOverflow.ellipsis))
+                              : Text(product.name),
+                          Text(
+                            ' - ${product.weightUnit == 'g' ? product.weight.toStringAsFixed(0) : product.weight.toStringAsFixed(1)}${product.weightUnit}',
+                          ),
+                        ],
                       ),
                     ),
                   )
                   .toList(),
               decoration: const InputDecoration(border: OutlineInputBorder(), labelText: 'Selecione um produto'),
+              selectedItemBuilder: (BuildContext context) {
+                final size = MediaQuery.of(context).size;
+                final maxWidth = size.width * 0.5;
+
+                return products.map<Widget>((product) {
+                  return Container(
+                    constraints: BoxConstraints(maxWidth: maxWidth),
+                    child: Text(
+                      product.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 14), // Smaller font size
+                    ),
+                  );
+                }).toList();
+              },
             ),
             const SizedBox(height: 16),
             TextField(

@@ -19,12 +19,6 @@ class CustomersPage extends ConsumerWidget {
         ),
         centerTitle: true,
         backgroundColor: const Color(0xFF248f3d),
-        actions: [
-          IconButton(
-            onPressed: () => context.go('/customers/form'),
-            icon: const Icon(Icons.add, color: Colors.white),
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(12),
@@ -35,6 +29,11 @@ class CustomersPage extends ConsumerWidget {
             return customers.isEmpty ? _buildEmptyState(context) : _buildClientesList(customers, ref);
           },
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.go('/customers/form'),
+        backgroundColor: const Color(0xFF248f3d),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
@@ -75,6 +74,7 @@ class CustomersPage extends ConsumerWidget {
 
   Widget _buildClientesList(List<CustomerModel> customers, WidgetRef ref) {
     return ListView.builder(
+      padding: const EdgeInsets.only(bottom: 80),
       itemCount: customers.length,
       itemBuilder: (context, index) {
         final customer = customers[index];
@@ -118,9 +118,15 @@ class CustomersPage extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(customer.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                      Expanded(
+                        child: Text(
+                          customer.name,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                       IconButton(
                         onPressed: () => context.go('/customers/form?id=${customer.id}'),
                         icon: const Icon(Icons.edit, size: 18, color: Colors.grey),
@@ -140,9 +146,14 @@ class CustomersPage extends ConsumerWidget {
                     children: [
                       const Icon(Icons.location_on, size: 18, color: Colors.grey),
                       const SizedBox(width: 5),
-                      Expanded(child: Text(customer.address)),
+                      Expanded(child: Text(customer.address, maxLines: 1, overflow: TextOverflow.ellipsis)),
                     ],
                   ),
+                  if (customer.observation != null && customer.observation!.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('Observação: ${customer.observation!}', style: const TextStyle(color: Colors.grey)),
+                    ),
                 ],
               ),
             ),

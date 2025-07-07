@@ -18,7 +18,21 @@ class SaleItemWidget extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Row(
           children: [
-            Expanded(child: Text('${item.productName} - ${item.weight.toStringAsFixed(0)}${item.weightUnit}')),
+            Expanded(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Tooltip(
+                      message: item.productName,
+                      child: Text(item.productName, overflow: TextOverflow.ellipsis),
+                    ),
+                  ),
+                  Text(
+                    ' - ${item.weightUnit == 'g' ? item.weight.toStringAsFixed(0) : item.weight.toStringAsFixed(1)}${item.weightUnit}',
+                  ),
+                ],
+              ),
+            ),
             SizedBox(
               width: 50,
               child: TextField(
