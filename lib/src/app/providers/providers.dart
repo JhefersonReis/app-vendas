@@ -8,6 +8,10 @@ import 'package:organik_vendas/src/features/products/data/product_repository.dar
 import 'package:organik_vendas/src/features/products/data/product_repository_impl.dart';
 import 'package:organik_vendas/src/features/products/domain/product_service.dart';
 import 'package:organik_vendas/src/features/products/domain/product_service_impl.dart';
+import 'package:organik_vendas/src/features/reports/data/reports_repository.dart';
+import 'package:organik_vendas/src/features/reports/data/reports_repository_impl.dart';
+import 'package:organik_vendas/src/features/reports/domain/reports_service.dart';
+import 'package:organik_vendas/src/features/reports/domain/reports_service_impl.dart';
 
 import 'package:organik_vendas/src/features/sales/controller/sales_controller.dart';
 import 'package:organik_vendas/src/features/sales/data/sales_repository.dart';
@@ -44,4 +48,13 @@ final salesServiceProvider = Provider<SalesService>((ref) => SalesServiceImpl(re
 
 final salesControllerProvider = StateNotifierProvider<SalesController, AsyncValue<List<SaleModel>>>(
   (ref) => SalesController(ref.read(salesServiceProvider)),
+);
+
+// Reports provider
+final reportsRepositoryProvider = Provider<ReportsRepository>(
+  (ref) => ReportsRepositoryImpl(database: ref.read(databaseProvider)),
+);
+
+final reportsServiceProvider = Provider<ReportsService>(
+  (ref) => ReportsServiceImpl(ref.read(reportsRepositoryProvider)),
 );

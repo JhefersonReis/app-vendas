@@ -163,35 +163,6 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   selectedItemColor: const Color(0xFF248f3d),
-      //   unselectedItemColor: Colors.grey,
-      //   currentIndex: 0,
-      //   type: BottomNavigationBarType.fixed,
-      //   onTap: (index) {
-      //     switch (index) {
-      //       case 1:
-      //         context.go('/sales');
-      //         break;
-      //       case 2:
-      //         context.go('/products');
-      //         break;
-      //       case 3:
-      //         context.go('/customers');
-      //         break;
-      //       case 4:
-      //         context.go('/reports');
-      //         break;
-      //     }
-      //   },
-      //   items: const [
-      //     BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Início'),
-      //     BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: 'Vendas'),
-      //     BottomNavigationBarItem(icon: Icon(Icons.inventory_2), label: 'Produtos'),
-      //     BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Clientes'),
-      //     BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Relatórios'),
-      //   ],
-      // ),
     );
   }
 }

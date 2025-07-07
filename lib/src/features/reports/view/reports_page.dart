@@ -1,44 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:organik_vendas/src/features/reports/controller/reports_controller.dart';
 
-class ReportsPage extends StatefulWidget {
+class ReportsPage extends ConsumerStatefulWidget {
   const ReportsPage({super.key});
 
   @override
-  State<ReportsPage> createState() => _ReportsPageState();
+  ConsumerState<ReportsPage> createState() => _ReportsPageState();
 }
 
-class _ReportsPageState extends State<ReportsPage> {
-  DateTime dataInicial = DateTime.now();
-  DateTime dataFinal = DateTime.now();
+class _ReportsPageState extends ConsumerState<ReportsPage> {
+  DateTime _startDate = DateTime(DateTime.now().year, DateTime.now().month, 1);
+  DateTime _endDate = DateTime(DateTime.now().year, DateTime.now().month + 1, 0);
 
-  Future<void> selecionarDataInicial() async {
-    final dataSelecionada = await showDatePicker(
-      context: context,
-      initialDate: dataInicial,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-    if (dataSelecionada != null) {
-      setState(() => dataInicial = dataSelecionada);
-    }
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await ref.read(reportsControllerProvider.notifier).getReportData(_startDate, _endDate);
+    });
   }
 
-  Future<void> selecionarDataFinal() async {
-    final dataSelecionada = await showDatePicker(
+  Future<void> _selectDate(BuildContext context, bool isStartDate) async {
+    final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: dataFinal,
+      initialDate: isStartDate ? _startDate : _endDate,
       firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
+      lastDate: DateTime(2101),
     );
-    if (dataSelecionada != null) {
-      setState(() => dataFinal = dataSelecionada);
+    if (picked != null && picked != (isStartDate ? _startDate : _endDate)) {
+      setState(() {
+        if (isStartDate) {
+          _startDate = picked;
+        } else {
+          _endDate = picked;
+        }
+      });
+      await ref.read(reportsControllerProvider.notifier).getReportData(_startDate, _endDate);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final formatoData = DateFormat('dd/MM/yyyy');
+    final reportsState = ref.watch(reportsControllerProvider);
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
@@ -49,218 +55,231 @@ class _ReportsPageState extends State<ReportsPage> {
         centerTitle: true,
         backgroundColor: const Color(0xFF248f3d),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(12),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Row(
-              children: [
-                Icon(Icons.bar_chart, color: Color(0xFF248f3d)),
-                SizedBox(width: 8),
-                Text(
-                  'Relatórios',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            // Card seleção de período
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+                side: BorderSide(color: Colors.grey),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Período', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Data Inícial', style: TextStyle(fontSize: 16)),
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              width: size.width * 0.4,
+                              child: TextField(
+                                controller: TextEditingController(text: DateFormat('dd/MM/yyyy').format(_startDate)),
+                                readOnly: true,
+                                onTap: () => _selectDate(context, true),
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.all(10),
+                                  suffixIcon: Icon(Icons.calendar_today),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Data Final', style: TextStyle(fontSize: 16)),
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              width: size.width * 0.4,
+                              child: TextField(
+                                controller: TextEditingController(text: DateFormat('dd/MM/yyyy').format(_endDate)),
+                                readOnly: true,
+                                onTap: () => _selectDate(context, false),
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.all(10),
+                                  suffixIcon: Icon(Icons.calendar_today),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-            const SizedBox(height: 12),
-
-            // Período
-            _buildCard(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Período',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildDataInput(
-                          label: 'Data Inicial',
-                          data: formatoData.format(dataInicial),
-                          onTap: selecionarDataInicial,
+            const SizedBox(height: 20),
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: () => ref.read(reportsControllerProvider.notifier).getReportData(_startDate, _endDate),
+                child: reportsState.when(
+                  data: (data) {
+                    if (data == null) {
+                      return const Center(child: Text('Selecione um período para gerar o relatório.'));
+                    }
+                    return ListView(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Card(
+                              child: Container(
+                                padding: const EdgeInsets.all(16.0),
+                                width: size.width * 0.42,
+                                child: Column(
+                                  children: [
+                                    Icon(Icons.attach_money, size: 32, color: Colors.green),
+                                    Text(
+                                      NumberFormat.simpleCurrency(locale: 'pt_BR').format(data.totalRevenue),
+                                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                    ),
+                                    Text('Receita Total', style: TextStyle(fontSize: 16)),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Card(
+                              child: Container(
+                                padding: const EdgeInsets.all(16.0),
+                                width: size.width * 0.42,
+                                child: Column(
+                                  children: [
+                                    Icon(Icons.shopping_cart, size: 32, color: Colors.blue),
+                                    Text(
+                                      data.totalSales.toString(),
+                                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                    ),
+                                    Text('Total de Vendas', style: TextStyle(fontSize: 16)),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: _buildDataInput(
-                          label: 'Data Final',
-                          data: formatoData.format(dataFinal),
-                          onTap: selecionarDataFinal,
+                        const SizedBox(height: 20),
+                        Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Status dos Pagamentos',
+                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(height: 10),
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 12,
+                                      height: 12,
+                                      decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.green),
+                                      margin: EdgeInsets.only(right: 8),
+                                    ),
+                                    Text('Vendas Pagas', style: TextStyle(fontSize: 16)),
+                                    Spacer(),
+                                    Text(data.paidSales.toString(), style: TextStyle(fontSize: 16)),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 12,
+                                      height: 12,
+                                      decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.orange),
+                                      margin: EdgeInsets.only(right: 8),
+                                    ),
+                                    Text('Vendas Pendentes', style: TextStyle(fontSize: 16)),
+                                    Spacer(),
+                                    Text(data.pendingSales.toString(), style: TextStyle(fontSize: 16)),
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: [
+                                    Text('Ticket Médio', style: TextStyle(fontSize: 16)),
+                                    Spacer(),
+                                    Text(
+                                      NumberFormat.simpleCurrency(locale: 'pt_BR').format(data.averageTicket),
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 12),
-
-            // Receita Total e Total de Vendas
-            _buildCard(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildResumoValor(
-                    icon: Icons.attach_money,
-                    label: 'Receita Total',
-                    valor: 'R\$ 0.00',
-                  ),
-                  _buildResumoValor(
-                    icon: Icons.inventory_2,
-                    label: 'Total de Vendas',
-                    valor: '0',
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 12),
-
-            // Status dos Pagamentos
-            _buildCard(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Status dos Pagamentos',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 10),
-                  _buildStatusLinha(
-                    Icons.circle,
-                    'Vendas Pagas',
-                    Colors.green,
-                    '0',
-                    'R\$ 0.00',
-                  ),
-                  const SizedBox(height: 5),
-                  _buildStatusLinha(
-                    Icons.circle,
-                    'Vendas Pendentes',
-                    Colors.orange,
-                    '0',
-                    'R\$ 0.00',
-                  ),
-                  const Divider(height: 20),
-                  const Text(
-                    'Ticket Médio',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 5),
-                  const Text('R\$ 0.00'),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 12),
-
-            // Produtos Mais Vendidos
-            _buildCard(
-              child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Produtos Mais Vendidos',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Nenhum produto registrado.',
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ],
+                        const SizedBox(height: 20),
+                        const Text(
+                          'Produtos Mais Vendidos',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        if (data.topProducts.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: const Text('Nenhum produto vendido neste período.', style: TextStyle(fontSize: 16)),
+                          ),
+                        ...data.topProducts.map(
+                          (p) => Card(
+                            child: ListTile(
+                              title: Text(p.product.name),
+                              subtitle: Text(
+                                'Vendido: ${p.quantitySold}x - Receita: ${NumberFormat.simpleCurrency(locale: 'pt_BR').format(p.totalRevenue)}',
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        const Text('Melhores Clientes', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        if (data.topCustomers.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: const Text(
+                              'Nenhum cliente encontrado neste período.',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ),
+                        ...data.topCustomers.map(
+                          (c) => Card(
+                            child: ListTile(
+                              title: Text(c.customer.name),
+                              subtitle: Text(
+                                'Compras: ${c.totalPurchases} - Total Gasto: ${NumberFormat.simpleCurrency(locale: 'pt_BR').format(c.totalSpent)}',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                  loading: () => const Center(child: CircularProgressIndicator()),
+                  error: (error, stackTrace) => Center(child: Text('Erro: $error')),
+                ),
               ),
             ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildCard({required Widget child}) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Padding(padding: const EdgeInsets.all(12), child: child),
-    );
-  }
-
-  Widget _buildDataInput({
-    required String label,
-    required String data,
-    required VoidCallback onTap,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label),
-        const SizedBox(height: 5),
-        InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(8),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.shade300),
-              borderRadius: BorderRadius.circular(8),
-              color: Colors.grey.shade100,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(data),
-                const Icon(Icons.calendar_today, size: 18, color: Colors.grey),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildResumoValor({
-    required IconData icon,
-    required String label,
-    required String valor,
-  }) {
-    return Column(
-      children: [
-        Icon(icon, size: 30, color: const Color(0xFF248f3d)),
-        const SizedBox(height: 5),
-        Text(
-          valor,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF248f3d),
-          ),
-        ),
-        Text(label),
-      ],
-    );
-  }
-
-  Widget _buildStatusLinha(
-    IconData icon,
-    String label,
-    Color color,
-    String quantidade,
-    String valor,
-  ) {
-    return Row(
-      children: [
-        Icon(icon, size: 12, color: color),
-        const SizedBox(width: 6),
-        Expanded(child: Text(label)),
-        Text(quantidade),
-        const SizedBox(width: 10),
-        Text(valor, style: TextStyle(color: color)),
-      ],
     );
   }
 }
