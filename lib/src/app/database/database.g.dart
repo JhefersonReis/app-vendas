@@ -880,6 +880,9 @@ class $SalesTable extends Sales with TableInfo<$SalesTable, Sale> {
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES customers (id) ON DELETE CASCADE',
+    ),
   );
   static const VerificationMeta _customerNameMeta = const VerificationMeta(
     'customerName',
@@ -1427,6 +1430,16 @@ abstract class _$Database extends GeneratedDatabase {
     products,
     sales,
   ];
+  @override
+  StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'customers',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('sales', kind: UpdateKind.delete)],
+    ),
+  ]);
 }
 
 typedef $$CustomersTableCreateCompanionBuilder =
@@ -1447,6 +1460,30 @@ typedef $$CustomersTableUpdateCompanionBuilder =
       Value<String?> observation,
       Value<DateTime> createdAt,
     });
+
+final class $$CustomersTableReferences
+    extends BaseReferences<_$Database, $CustomersTable, Customer> {
+  $$CustomersTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$SalesTable, List<Sale>> _salesRefsTable(
+    _$Database db,
+  ) => MultiTypedResultKey.fromTable(
+    db.sales,
+    aliasName: $_aliasNameGenerator(db.customers.id, db.sales.customerId),
+  );
+
+  $$SalesTableProcessedTableManager get salesRefs {
+    final manager = $$SalesTableTableManager(
+      $_db,
+      $_db.sales,
+    ).filter((f) => f.customerId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_salesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
 
 class $$CustomersTableFilterComposer
     extends Composer<_$Database, $CustomersTable> {
@@ -1486,6 +1523,31 @@ class $$CustomersTableFilterComposer
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  Expression<bool> salesRefs(
+    Expression<bool> Function($$SalesTableFilterComposer f) f,
+  ) {
+    final $$SalesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.sales,
+      getReferencedColumn: (t) => t.customerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SalesTableFilterComposer(
+            $db: $db,
+            $table: $db.sales,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$CustomersTableOrderingComposer
@@ -1556,6 +1618,31 @@ class $$CustomersTableAnnotationComposer
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  Expression<T> salesRefs<T extends Object>(
+    Expression<T> Function($$SalesTableAnnotationComposer a) f,
+  ) {
+    final $$SalesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.sales,
+      getReferencedColumn: (t) => t.customerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SalesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.sales,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$CustomersTableTableManager
@@ -1569,9 +1656,9 @@ class $$CustomersTableTableManager
           $$CustomersTableAnnotationComposer,
           $$CustomersTableCreateCompanionBuilder,
           $$CustomersTableUpdateCompanionBuilder,
-          (Customer, BaseReferences<_$Database, $CustomersTable, Customer>),
+          (Customer, $$CustomersTableReferences),
           Customer,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool salesRefs})
         > {
   $$CustomersTableTableManager(_$Database db, $CustomersTable table)
     : super(
@@ -1617,9 +1704,35 @@ class $$CustomersTableTableManager
                 createdAt: createdAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$CustomersTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({salesRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (salesRefs) db.sales],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (salesRefs)
+                    await $_getPrefetchedData<Customer, $CustomersTable, Sale>(
+                      currentTable: table,
+                      referencedTable: $$CustomersTableReferences
+                          ._salesRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$CustomersTableReferences(db, table, p0).salesRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where((e) => e.customerId == item.id),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
         ),
       );
 }
@@ -1634,9 +1747,9 @@ typedef $$CustomersTableProcessedTableManager =
       $$CustomersTableAnnotationComposer,
       $$CustomersTableCreateCompanionBuilder,
       $$CustomersTableUpdateCompanionBuilder,
-      (Customer, BaseReferences<_$Database, $CustomersTable, Customer>),
+      (Customer, $$CustomersTableReferences),
       Customer,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool salesRefs})
     >;
 typedef $$ProductsTableCreateCompanionBuilder =
     ProductsCompanion Function({
@@ -1893,6 +2006,28 @@ typedef $$SalesTableUpdateCompanionBuilder =
       Value<DateTime> createdAt,
     });
 
+final class $$SalesTableReferences
+    extends BaseReferences<_$Database, $SalesTable, Sale> {
+  $$SalesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $CustomersTable _customerIdTable(_$Database db) => db.customers
+      .createAlias($_aliasNameGenerator(db.sales.customerId, db.customers.id));
+
+  $$CustomersTableProcessedTableManager get customerId {
+    final $_column = $_itemColumn<int>('customer_id')!;
+
+    final manager = $$CustomersTableTableManager(
+      $_db,
+      $_db.customers,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_customerIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
 class $$SalesTableFilterComposer extends Composer<_$Database, $SalesTable> {
   $$SalesTableFilterComposer({
     required super.$db,
@@ -1903,11 +2038,6 @@ class $$SalesTableFilterComposer extends Composer<_$Database, $SalesTable> {
   });
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get customerId => $composableBuilder(
-    column: $table.customerId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1946,6 +2076,29 @@ class $$SalesTableFilterComposer extends Composer<_$Database, $SalesTable> {
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$CustomersTableFilterComposer get customerId {
+    final $$CustomersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.customerId,
+      referencedTable: $db.customers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CustomersTableFilterComposer(
+            $db: $db,
+            $table: $db.customers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$SalesTableOrderingComposer extends Composer<_$Database, $SalesTable> {
@@ -1958,11 +2111,6 @@ class $$SalesTableOrderingComposer extends Composer<_$Database, $SalesTable> {
   });
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get customerId => $composableBuilder(
-    column: $table.customerId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -2000,6 +2148,29 @@ class $$SalesTableOrderingComposer extends Composer<_$Database, $SalesTable> {
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$CustomersTableOrderingComposer get customerId {
+    final $$CustomersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.customerId,
+      referencedTable: $db.customers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CustomersTableOrderingComposer(
+            $db: $db,
+            $table: $db.customers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$SalesTableAnnotationComposer extends Composer<_$Database, $SalesTable> {
@@ -2012,11 +2183,6 @@ class $$SalesTableAnnotationComposer extends Composer<_$Database, $SalesTable> {
   });
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<int> get customerId => $composableBuilder(
-    column: $table.customerId,
-    builder: (column) => column,
-  );
 
   GeneratedColumn<String> get customerName => $composableBuilder(
     column: $table.customerName,
@@ -2042,6 +2208,29 @@ class $$SalesTableAnnotationComposer extends Composer<_$Database, $SalesTable> {
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$CustomersTableAnnotationComposer get customerId {
+    final $$CustomersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.customerId,
+      referencedTable: $db.customers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CustomersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.customers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$SalesTableTableManager
@@ -2055,9 +2244,9 @@ class $$SalesTableTableManager
           $$SalesTableAnnotationComposer,
           $$SalesTableCreateCompanionBuilder,
           $$SalesTableUpdateCompanionBuilder,
-          (Sale, BaseReferences<_$Database, $SalesTable, Sale>),
+          (Sale, $$SalesTableReferences),
           Sale,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool customerId})
         > {
   $$SalesTableTableManager(_$Database db, $SalesTable table)
     : super(
@@ -2115,9 +2304,52 @@ class $$SalesTableTableManager
                 createdAt: createdAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) =>
+                    (e.readTable(table), $$SalesTableReferences(db, table, e)),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({customerId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (customerId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.customerId,
+                                referencedTable: $$SalesTableReferences
+                                    ._customerIdTable(db),
+                                referencedColumn: $$SalesTableReferences
+                                    ._customerIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -2132,9 +2364,9 @@ typedef $$SalesTableProcessedTableManager =
       $$SalesTableAnnotationComposer,
       $$SalesTableCreateCompanionBuilder,
       $$SalesTableUpdateCompanionBuilder,
-      (Sale, BaseReferences<_$Database, $SalesTable, Sale>),
+      (Sale, $$SalesTableReferences),
       Sale,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool customerId})
     >;
 
 class $DatabaseManager {

@@ -1,10 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:organik_vendas/src/app/providers/providers.dart';
+import 'package:organik_vendas/src/features/customers/controller/customers_controller.dart';
 import 'package:organik_vendas/src/features/sales/domain/sale_model.dart';
 import 'package:organik_vendas/src/features/sales/domain/sales_service.dart';
 
-final salesControllerProvider = StateNotifierProvider<SalesController, AsyncValue<List<SaleModel>>>(
-  (ref) => SalesController(ref.read(salesServiceProvider)),
+final salesControllerProvider = StateNotifierProvider.autoDispose<SalesController, AsyncValue<List<SaleModel>>>(
+  (ref) {
+    ref.watch(customersControllerProvider);
+    return SalesController(ref.read(salesServiceProvider));
+  },
 );
 
 final saleByIdProvider = FutureProvider.family<SaleModel, int>((ref, id) => ref.read(salesServiceProvider).getById(id));

@@ -23,7 +23,7 @@ class Database extends _$Database {
     return LazyDatabase(() async {
       final dbFolder = await getApplicationSupportDirectory();
       final file = File('${dbFolder.path}/app_database.sqlite');
-      return NativeDatabase(file);
+      return NativeDatabase(file, setup: (db) => db.execute('PRAGMA foreign_keys = ON'));
     });
   }
 }
