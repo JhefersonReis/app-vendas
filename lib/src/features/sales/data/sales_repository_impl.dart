@@ -55,6 +55,27 @@ class SalesRepositoryImpl implements SalesRepository {
   }
 
   @override
+  Future<List<SaleModel>> search(String query) async {
+    final sales = await (_database.select(_database.sales)..where((tbl) => tbl.customerName.contains(query))).get();
+
+    return sales
+        .map(
+          (sale) => SaleModel(
+            id: sale.id,
+            customerId: sale.customerId,
+            customerName: sale.customerName,
+            saleDate: sale.saleDate,
+            items: sale.items,
+            total: sale.total,
+            isPaid: sale.isPaid,
+            observation: sale.observation,
+            createdAt: sale.createdAt,
+          ),
+        )
+        .toList();
+  }
+
+  @override
   Future<SaleModel> getById(int id) async {
     final sale = await (_database.select(_database.sales)..where((tbl) => tbl.id.equals(id))).getSingle();
 

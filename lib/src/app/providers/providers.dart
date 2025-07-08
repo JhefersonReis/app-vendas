@@ -55,7 +55,7 @@ final salesRepositoryProvider = Provider<SalesRepository>(
 final salesServiceProvider = Provider<SalesService>((ref) => SalesServiceImpl(ref.read(salesRepositoryProvider)));
 
 final salesControllerProvider = StateNotifierProvider<SalesController, AsyncValue<List<SaleModel>>>(
-  (ref) => SalesController(ref.read(salesServiceProvider)),
+  (ref) => SalesController(ref.read(salesServiceProvider), ref),
 );
 
 // Reports provider

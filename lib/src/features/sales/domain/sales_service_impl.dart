@@ -17,6 +17,9 @@ class SalesServiceImpl implements SalesService {
   Future<List<SaleModel>> findAll() => _repository.findAll();
 
   @override
+  Future<List<SaleModel>> search(String query) => _repository.search(query);
+
+  @override
   Future<SaleModel> getById(int id) => _repository.getById(id);
 
   @override
