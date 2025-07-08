@@ -12,6 +12,7 @@ class CustomersServiceImpl implements CustomersService {
     required String name,
     required String address,
     required String phone,
+    required String countryISOCode,
     String? observation,
   }) async {
     final customer = CustomerModel(
@@ -19,6 +20,7 @@ class CustomersServiceImpl implements CustomersService {
       name: name,
       address: address,
       phone: phone,
+      countryISOCode: countryISOCode,
       observation: observation,
       createdAt: DateTime.now(),
     );
@@ -41,6 +43,7 @@ class CustomersServiceImpl implements CustomersService {
     required String name,
     required String address,
     required String phone,
+    required String countryISOCode,
     required DateTime createdAt,
     String? observation,
   }) async {
@@ -49,6 +52,7 @@ class CustomersServiceImpl implements CustomersService {
       name: name,
       address: address,
       phone: phone,
+      countryISOCode: countryISOCode,
       observation: observation,
       createdAt: createdAt,
     );

@@ -7,6 +7,7 @@ abstract interface class CustomersService {
     required String name,
     required String address,
     required String phone,
+    required String countryISOCode,
     String? observation,
   });
   Future<CustomerModel> update({
@@ -14,6 +15,7 @@ abstract interface class CustomersService {
     required String name,
     required String address,
     required String phone,
+    required String countryISOCode,
     required DateTime createdAt,
     String? observation,
   });

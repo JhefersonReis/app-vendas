@@ -31,9 +31,16 @@ class CustomersController extends StateNotifier<AsyncValue<List<CustomerModel>>>
     required String name,
     required String address,
     required String phone,
+    required String countryISOCode,
     String? observation,
   }) async {
-    final newCustomer = await _service.create(name: name, address: address, phone: phone, observation: observation);
+    final newCustomer = await _service.create(
+      name: name,
+      address: address,
+      phone: phone,
+      countryISOCode: countryISOCode,
+      observation: observation,
+    );
 
     final current = state.valueOrNull ?? [];
     state = AsyncData([...current, newCustomer]);
@@ -44,6 +51,7 @@ class CustomersController extends StateNotifier<AsyncValue<List<CustomerModel>>>
     required String name,
     required String address,
     required String phone,
+    required String countryISOCode,
     required DateTime createdAt,
     String? observation,
   }) async {
@@ -52,6 +60,7 @@ class CustomersController extends StateNotifier<AsyncValue<List<CustomerModel>>>
       name: name,
       address: address,
       phone: phone,
+      countryISOCode: countryISOCode,
       observation: observation,
       createdAt: createdAt,
     );

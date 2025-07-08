@@ -3,6 +3,7 @@ class CustomerModel {
   final String name;
   final String address;
   final String phone;
+  final String countryISOCode;
   final String? observation;
   final DateTime createdAt;
 
@@ -11,6 +12,7 @@ class CustomerModel {
     required this.name,
     required this.address,
     required this.phone,
+    required this.countryISOCode,
     this.observation,
     required this.createdAt,
   });
@@ -21,6 +23,7 @@ class CustomerModel {
       'name': name,
       'address': address,
       'phone': phone,
+      'countryISOCode': countryISOCode,
       'observation': observation,
       'createdAt': createdAt.toIso8601String(),
     };
@@ -32,6 +35,7 @@ class CustomerModel {
       name: json['name'],
       address: json['address'],
       phone: json['phone'],
+      countryISOCode: json['countryISOCode'],
       observation: json['observation'],
       createdAt: DateTime.parse(json['createdAt']),
     );
@@ -42,6 +46,7 @@ class CustomerModel {
     String? name,
     String? address,
     String? phone,
+    String? countryISOCode,
     String? observation,
     DateTime? createdAt,
   }) {
@@ -50,6 +55,7 @@ class CustomerModel {
       name: name ?? this.name,
       address: address ?? this.address,
       phone: phone ?? this.phone,
+      countryISOCode: countryISOCode ?? this.countryISOCode,
       observation: observation ?? this.observation,
       createdAt: createdAt ?? this.createdAt,
     );

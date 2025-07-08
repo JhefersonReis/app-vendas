@@ -82,6 +82,7 @@ class ReportsRepositoryImpl implements ReportsRepository {
             id: customer.id,
             name: customer.name,
             phone: customer.phone,
+            countryISOCode: customer.countryISOCode,
             address: customer.address,
             createdAt: customer.createdAt,
           ),

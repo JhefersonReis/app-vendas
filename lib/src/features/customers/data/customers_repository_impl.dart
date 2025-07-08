@@ -17,6 +17,7 @@ class CustomersRepositoryImpl implements CustomersRepository {
             name: customer.name,
             address: customer.address,
             phone: customer.phone,
+            countryISOCode: customer.countryISOCode,
             observation: Value(customer.observation),
             createdAt: customer.createdAt,
           ),
@@ -27,9 +28,7 @@ class CustomersRepositoryImpl implements CustomersRepository {
 
   @override
   Future<void> delete(int id) async {
-    await (_database.delete(
-      _database.customers,
-    )..where((tbl) => tbl.id.equals(id))).go();
+    await (_database.delete(_database.customers)..where((tbl) => tbl.id.equals(id))).go();
   }
 
   @override
@@ -42,6 +41,7 @@ class CustomersRepositoryImpl implements CustomersRepository {
             name: customer.name,
             address: customer.address,
             phone: customer.phone,
+            countryISOCode: customer.countryISOCode,
             observation: customer.observation,
             createdAt: customer.createdAt,
           ),
@@ -51,14 +51,13 @@ class CustomersRepositoryImpl implements CustomersRepository {
 
   @override
   Future<CustomerModel> findById(int id) async {
-    final customer = await (_database.select(
-      _database.customers,
-    )..where((tbl) => tbl.id.equals(id))).getSingle();
+    final customer = await (_database.select(_database.customers)..where((tbl) => tbl.id.equals(id))).getSingle();
     return CustomerModel(
       id: customer.id,
       name: customer.name,
       address: customer.address,
       phone: customer.phone,
+      countryISOCode: customer.countryISOCode,
       observation: customer.observation,
       createdAt: customer.createdAt,
     );
@@ -66,13 +65,12 @@ class CustomersRepositoryImpl implements CustomersRepository {
 
   @override
   Future<CustomerModel> update(CustomerModel customer) async {
-    await (_database.update(
-      _database.customers,
-    )..where((tbl) => tbl.id.equals(customer.id))).write(
+    await (_database.update(_database.customers)..where((tbl) => tbl.id.equals(customer.id))).write(
       CustomersCompanion(
         name: Value(customer.name),
         address: Value(customer.address),
         phone: Value(customer.phone),
+        countryISOCode: Value(customer.countryISOCode),
         observation: Value(customer.observation),
       ),
     );
