@@ -14,10 +14,11 @@ class ReportsRepositoryImpl implements ReportsRepository {
 
   @override
   Future<ReportData> getReportData(DateTime startDate, DateTime endDate) async {
-    final sales = await (_database.select(_database.sales)
-          ..where((tbl) => tbl.saleDate.isBiggerOrEqualValue(startDate))
-          ..where((tbl) => tbl.saleDate.isSmallerOrEqualValue(endDate)))
-        .get();
+    final sales =
+        await (_database.select(_database.sales)
+              ..where((tbl) => tbl.saleDate.isBiggerOrEqualValue(startDate))
+              ..where((tbl) => tbl.saleDate.isSmallerOrEqualValue(endDate)))
+            .get();
 
     final totalRevenue = sales.fold<double>(0, (prev, sale) => prev + sale.total);
     final totalSales = sales.length;
@@ -35,12 +36,13 @@ class ReportsRepositoryImpl implements ReportsRepository {
       }
     }
 
-    final topProductIds = productSales.keys.toList()
-      ..sort((a, b) => productSales[b]!.compareTo(productSales[a]!));
+    final topProductIds = productSales.keys.toList()..sort((a, b) => productSales[b]!.compareTo(productSales[a]!));
 
     final topProducts = <TopProduct>[];
-    for (var productId in topProductIds.take(5)) {
-      final product = await (_database.select(_database.products)..where((tbl) => tbl.id.equals(productId))).getSingle();
+    for (var productId in topProductIds.take(3)) {
+      final product = await (_database.select(
+        _database.products,
+      )..where((tbl) => tbl.id.equals(productId))).getSingle();
       topProducts.add(
         TopProduct(
           product: ProductModel(
@@ -70,9 +72,10 @@ class ReportsRepositoryImpl implements ReportsRepository {
       ..sort((a, b) => customerPurchases[b]!.compareTo(customerPurchases[a]!));
 
     final topCustomers = <TopCustomer>[];
-    for (var customerId in topCustomerIds.take(5)) {
-      final customer =
-          await (_database.select(_database.customers)..where((tbl) => tbl.id.equals(customerId))).getSingle();
+    for (var customerId in topCustomerIds.take(3)) {
+      final customer = await (_database.select(
+        _database.customers,
+      )..where((tbl) => tbl.id.equals(customerId))).getSingle();
       topCustomers.add(
         TopCustomer(
           customer: CustomerModel(

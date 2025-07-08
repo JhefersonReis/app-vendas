@@ -19,18 +19,8 @@ class SaleItemWidget extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Tooltip(
-                      message: item.productName,
-                      child: Text(item.productName, overflow: TextOverflow.ellipsis),
-                    ),
-                  ),
-                  Text(
-                    ' - ${item.weightUnit == 'g' ? item.weight.toStringAsFixed(0) : item.weight.toStringAsFixed(1)}${item.weightUnit}',
-                  ),
-                ],
+              child: Text(
+                '${item.productName} - ${item.weightUnit == 'g' ? item.weight.toStringAsFixed(0) : item.weight.toStringAsFixed(1)}${item.weightUnit}',
               ),
             ),
             SizedBox(

@@ -180,9 +180,16 @@ class _CustomersFormPageState extends ConsumerState<CustomersFormPage> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
               onPressed: _saveCustomer,
-              child: Text(
-                widget.id != null ? 'Salvar Alterações' : 'Cadastrar Cliente',
-                style: const TextStyle(color: Colors.white),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.save, color: Colors.white),
+                  const SizedBox(width: 8),
+                  Text(
+                    '${widget.id == null ? 'Cadastrar' : 'Atualizar'} Cliente',
+                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                ],
               ),
             ),
           ],
