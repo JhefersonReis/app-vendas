@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:organik_vendas/src/features/sales/domain/item_model.dart';
 
 class SaleItemWidget extends StatelessWidget {
@@ -36,9 +37,12 @@ class SaleItemWidget extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            Text('R\$ ${item.unitPrice.toStringAsFixed(2)}'),
+            Text(NumberFormat.simpleCurrency(locale: 'pt_BR').format(item.unitPrice)),
             const SizedBox(width: 8),
-            Text('R\$ ${item.totalPrice.toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text(
+              NumberFormat.simpleCurrency(locale: 'pt_BR').format(item.totalPrice),
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
             IconButton(
               icon: const Icon(Icons.delete, color: Colors.red),
               onPressed: onDelete,

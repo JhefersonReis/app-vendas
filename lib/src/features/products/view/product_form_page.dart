@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:organik_vendas/src/features/products/controller/product_controller.dart';
@@ -44,13 +45,22 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
     final product = await ref.read(productByIdProvider(id).future);
 
     productName.text = product.name;
-    productPrice.text = product.price.toString();
+    productPrice.text = toCurrencyString(
+      product.price.toString(),
+      leadingSymbol: 'R\$',
+      useSymbolPadding: true,
+      thousandSeparator: ThousandSeparator.Period,
+      mantissaLength: 2,
+      trailingSymbol: '',
+    );
     productWeight.text = product.weight.toString();
     productWeightUnit.text = product.weightUnit;
     productDescription.text = product.description;
   }
 
   Future<void> _saveProduct() async {
+    final price = _parseCurrencyToDouble(productPrice.text);
+
     if (widget.id != null) {
       final product = await ref.read(productByIdProvider(int.parse(widget.id!)).future);
 
@@ -59,7 +69,7 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
           .updateProduct(
             id: product.id,
             name: productName.text,
-            price: double.parse(productPrice.text),
+            price: price,
             weight: double.parse(productWeight.text),
             weightUnit: productWeightUnit.text,
             description: productDescription.text,
@@ -72,7 +82,7 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
           .read(productsControllerProvider.notifier)
           .createProduct(
             name: productName.text,
-            price: double.parse(productPrice.text),
+            price: price,
             weight: double.parse(productWeight.text),
             weightUnit: productWeightUnit.text,
             description: productDescription.text,
@@ -140,7 +150,16 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                       ),
                       TextField(
                         controller: productPrice,
-                        decoration: const InputDecoration(hintText: '0,00', border: OutlineInputBorder()),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          CurrencyInputFormatter(
+                            leadingSymbol: 'R\$',
+                            useSymbolPadding: true,
+                            thousandSeparator: ThousandSeparator.Period,
+                            mantissaLength: 2,
+                          ),
+                        ],
+                        decoration: const InputDecoration(hintText: 'R\$ 0,00', border: OutlineInputBorder()),
                         onTapOutside: (_) => FocusScope.of(context).unfocus(),
                       ),
                     ],
@@ -240,5 +259,9 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
         ),
       ),
     );
+  }
+
+  double _parseCurrencyToDouble(String currency) {
+    return double.parse(currency.replaceAll('R\$', '').replaceAll('.', '').replaceAll(',', '.'));
   }
 }

@@ -165,7 +165,10 @@ class SalesPage extends ConsumerWidget {
                         children: [
                           const Icon(Icons.attach_money, size: 18, color: Colors.grey),
                           const SizedBox(width: 5),
-                          Text('R\$ ${venda.total.toStringAsFixed(2)}', style: const TextStyle(color: Colors.green)),
+                          Text(
+                            NumberFormat.simpleCurrency(locale: 'pt_BR').format(venda.total),
+                            style: const TextStyle(color: Colors.green),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 5),

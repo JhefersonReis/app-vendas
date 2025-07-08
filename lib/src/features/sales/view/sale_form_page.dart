@@ -195,7 +195,7 @@ class _SaleFormState extends ConsumerState<_SaleForm> {
                         ),
                       )
                       .toList(),
-                  decoration: const InputDecoration(border: OutlineInputBorder(), labelText: 'Selecione um cliente'),
+                  decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Selecione um cliente'),
                   menuMaxHeight: 200,
                   isExpanded: true,
                   selectedItemBuilder: (BuildContext context) {
@@ -276,7 +276,7 @@ class _SaleFormState extends ConsumerState<_SaleForm> {
                     const Text("Total da Venda:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                     const Spacer(),
                     Text(
-                      "R\$ ${_total.toStringAsFixed(2)}",
+                      NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$', decimalDigits: 2).format(_total),
                       style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF248f3d)),
                     ),
                   ],
