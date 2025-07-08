@@ -4,6 +4,7 @@ import 'package:organik_vendas/src/features/customers/data/customers_repository.
 import 'package:organik_vendas/src/features/customers/data/customers_repository_impl.dart';
 import 'package:organik_vendas/src/features/customers/domain/customers_service.dart';
 import 'package:organik_vendas/src/features/customers/domain/customers_service_impl.dart';
+import 'package:organik_vendas/src/features/home/controller/home_state.dart';
 import 'package:organik_vendas/src/features/products/data/product_repository.dart';
 import 'package:organik_vendas/src/features/products/data/product_repository_impl.dart';
 import 'package:organik_vendas/src/features/products/domain/product_service.dart';
@@ -19,6 +20,13 @@ import 'package:organik_vendas/src/features/sales/data/sales_repository_impl.dar
 import 'package:organik_vendas/src/features/sales/domain/sale_model.dart';
 import 'package:organik_vendas/src/features/sales/domain/sales_service.dart';
 import 'package:organik_vendas/src/features/sales/domain/sales_service_impl.dart';
+
+import 'package:organik_vendas/src/features/home/controller/home_controller.dart';
+
+// Home provider
+final homeControllerProvider = StateNotifierProvider<HomeController, HomeState>((ref) {
+  return HomeController(ref);
+});
 
 // Database provider
 final databaseProvider = Provider<Database>((ref) => Database());

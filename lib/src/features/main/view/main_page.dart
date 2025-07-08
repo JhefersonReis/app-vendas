@@ -14,10 +14,7 @@ class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
 
   void _goBranch(int index) {
-    widget.navigationShell.goBranch(
-      index,
-      initialLocation: index == widget.navigationShell.currentIndex,
-    );
+    widget.navigationShell.goBranch(index, initialLocation: index == widget.navigationShell.currentIndex);
   }
 
   @override
@@ -37,19 +34,10 @@ class _MainPageState extends State<MainPage> {
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Início'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: 'Vendas',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.inventory_2),
-            label: 'Produtos',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: 'Vendas'),
+          BottomNavigationBarItem(icon: Icon(Icons.inventory_2), label: 'Produtos'),
           BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Clientes'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart),
-            label: 'Relatórios',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Relatórios'),
         ],
       ),
     );

@@ -1,16 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:organik_vendas/src/features/home/controller/home_controller.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends ConsumerState<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(homeControllerProvider.notifier).loadData();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(homeControllerProvider);
+
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
@@ -43,15 +56,21 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Column(
-                          children: const [
-                            Text('R\$ 7.50', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                            Text('Total Vendido'),
+                          children: [
+                            Text(
+                              NumberFormat.simpleCurrency(locale: 'pt_BR').format(state.totalSoldToday),
+                              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            const Text('Total Vendido'),
                           ],
                         ),
                         Column(
-                          children: const [
-                            Text('3', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                            Text('Pedidos'),
+                          children: [
+                            Text(
+                              state.todayOrders.toString(),
+                              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            const Text('Pedidos'),
                           ],
                         ),
                       ],
@@ -129,31 +148,39 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   spacing: 4,
-                  children: const [
-                    Text('Estatísticas', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                    SizedBox(height: 10),
+                  children: [
+                    const Text('Estatísticas', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                    const SizedBox(height: 10),
                     Row(
                       children: [
-                        Expanded(
+                        const Expanded(
                           child: Text('Total de Vendas: ', style: TextStyle(fontWeight: FontWeight.bold)),
                         ),
-                        Text('10', style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(state.totalSales.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
                       ],
                     ),
                     Row(
                       children: [
-                        Expanded(
+                        const Expanded(
                           child: Text('Total de Clientes: ', style: TextStyle(fontWeight: FontWeight.bold)),
                         ),
-                        Text('10', style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(state.totalCustomers.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
                       ],
                     ),
                     Row(
                       children: [
-                        Expanded(
+                        const Expanded(
+                          child: Text('Total de Produtos: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                        Text(state.totalProducts.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Expanded(
                           child: Text('Vendas Pendentes: ', style: TextStyle(fontWeight: FontWeight.bold)),
                         ),
-                        Text('10', style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(state.pendingSales.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
                       ],
                     ),
                   ],
