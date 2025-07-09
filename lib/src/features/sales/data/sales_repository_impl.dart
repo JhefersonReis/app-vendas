@@ -34,8 +34,14 @@ class SalesRepositoryImpl implements SalesRepository {
   }
 
   @override
-  Future<List<SaleModel>> findAll() async {
-    final sales = await _database.select(_database.sales).get();
+  Future<List<SaleModel>> findAll({bool? isPaid}) async {
+    final query = _database.select(_database.sales);
+
+    if (isPaid != null) {
+      query.where((tbl) => tbl.isPaid.equals(isPaid));
+    }
+
+    final sales = await query.get();
 
     return sales
         .map(

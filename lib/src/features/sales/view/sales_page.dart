@@ -30,7 +30,7 @@ class SalesPage extends ConsumerWidget {
               return const SaleEmptyWidget();
             }
             // Caso contrário, mostramos o SaleListWidget que vai exibir as vendas filtradas
-            return SaleListWidget();
+            return const SaleListWidget();
           },
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (e, s) => Center(child: Text('Erro ao carregar vendas: $e')),

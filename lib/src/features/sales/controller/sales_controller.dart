@@ -22,16 +22,38 @@ final saleByIdProvider = FutureProvider.family<SaleModel, int>((ref, id) => ref.
 
 final salesFilterProvider = StateProvider.autoDispose<String>((ref) => '');
 
+enum SalesStatusFilter { all, paid, unpaid }
+
+final salesStatusFilterProvider = StateProvider.autoDispose<SalesStatusFilter>((ref) => SalesStatusFilter.all);
+
 final filteredSalesProvider = Provider.autoDispose<List<SaleModel>>((ref) {
   final salesState = ref.watch(salesControllerProvider);
   final filter = ref.watch(salesFilterProvider);
+  final statusFilter = ref.watch(salesStatusFilterProvider);
 
   return salesState.when(
     data: (sales) {
-      if (filter.isEmpty) {
-        return sales;
+      List<SaleModel> filteredSales;
+
+      // Filtro por status
+      switch (statusFilter) {
+        case SalesStatusFilter.paid:
+          filteredSales = sales.where((sale) => sale.isPaid).toList();
+          break;
+        case SalesStatusFilter.unpaid:
+          filteredSales = sales.where((sale) => !sale.isPaid).toList();
+          break;
+        case SalesStatusFilter.all:
+          filteredSales = sales;
+          break;
       }
-      return sales.where((sale) => sale.customerName.toLowerCase().contains(filter.toLowerCase())).toList();
+
+      // Filtro por nome
+      if (filter.isNotEmpty) {
+        filteredSales = filteredSales.where((sale) => sale.customerName.toLowerCase().contains(filter.toLowerCase())).toList();
+      }
+
+      return filteredSales;
     },
     loading: () => [],
     error: (e, s) => [],
@@ -58,6 +80,10 @@ class SalesController extends StateNotifier<AsyncValue<List<SaleModel>>> {
 
   void search(String query) {
     _ref.read(salesFilterProvider.notifier).state = query;
+  }
+
+  void setStatusFilter(SalesStatusFilter filter) {
+    _ref.read(salesStatusFilterProvider.notifier).state = filter;
   }
 
   Future<void> create(SaleModel sale) async {

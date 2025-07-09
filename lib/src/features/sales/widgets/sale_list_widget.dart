@@ -13,16 +13,38 @@ class SaleListWidget extends ConsumerWidget {
 
     return Column(
       children: [
-        TextField(
-          decoration: InputDecoration(
-            hintText: 'Pesquisar',
-            prefixIcon: const Icon(Icons.search),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-          ),
-          onTapOutside: (_) => FocusScope.of(context).unfocus(),
-          onChanged: (value) {
-            ref.read(salesFilterProvider.notifier).state = value;
-          },
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Pesquisar',
+                  prefixIcon: const Icon(Icons.search),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                ),
+                onTapOutside: (_) => FocusScope.of(context).unfocus(),
+                onChanged: (value) {
+                  ref.read(salesFilterProvider.notifier).state = value;
+                },
+              ),
+            ),
+            const SizedBox(width: 8),
+            PopupMenuButton(
+              offset: Offset(0, 30),
+              tooltip: 'Filtrar por',
+              itemBuilder: (context) {
+                return [
+                  PopupMenuItem(value: SalesStatusFilter.all, child: Text('Todas')),
+                  PopupMenuItem(value: SalesStatusFilter.unpaid, child: Text('Pendentes')),
+                  PopupMenuItem(value: SalesStatusFilter.paid, child: Text('Pagas')),
+                ];
+              },
+              onSelected: (value) {
+                ref.read(salesStatusFilterProvider.notifier).state = value;
+              },
+              child: Icon(Icons.filter_list),
+            ),
+          ],
         ),
         const SizedBox(height: 8),
         Expanded(

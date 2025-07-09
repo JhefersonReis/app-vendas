@@ -14,7 +14,7 @@ class SalesServiceImpl implements SalesService {
   Future<void> delete(int id) => _repository.delete(id);
 
   @override
-  Future<List<SaleModel>> findAll() => _repository.findAll();
+  Future<List<SaleModel>> findAll({bool? isPaid}) => _repository.findAll(isPaid: isPaid);
 
   @override
   Future<List<SaleModel>> search(String query) => _repository.search(query);
