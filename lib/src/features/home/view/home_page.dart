@@ -34,160 +34,163 @@ class _HomePageState extends ConsumerState<HomePage> {
         centerTitle: true,
         backgroundColor: const Color(0xFF248f3d),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Resumo de Hoje
-            Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Resumo de Hoje',
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green, fontSize: 18),
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Column(
-                          children: [
-                            Text(
-                              NumberFormat.simpleCurrency(locale: 'pt_BR').format(state.totalSoldToday),
-                              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            const Text('Total Vendido'),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              state.todayOrders.toString(),
-                              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            const Text('Pedidos'),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-
-            // Ações Rápidas
-            Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('Ações Rápidas', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                    const SizedBox(height: 10),
-                    ElevatedButton.icon(
-                      onPressed: () => context.go('/sales/form'),
-                      icon: const Icon(Icons.add),
-                      label: const Text('Nova Venda'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF248f3d),
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                        minimumSize: const Size(double.infinity, 45),
+      body: RefreshIndicator(
+        onRefresh: () => ref.read(homeControllerProvider.notifier).loadData(),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Resumo de Hoje
+              Card(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Resumo de Hoje',
+                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green, fontSize: 18),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: () => context.go('/products'),
-                            icon: const Icon(Icons.inventory_2),
-                            label: const Text('Produtos'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.grey[100],
-                              foregroundColor: Colors.black,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                              elevation: 0,
-                            ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(
+                            children: [
+                              Text(
+                                NumberFormat.simpleCurrency(locale: 'pt_BR').format(state.totalSoldToday),
+                                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                              const Text('Total Vendido'),
+                            ],
                           ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: () => context.go('/customers'),
-                            icon: const Icon(Icons.people),
-                            label: const Text('Clientes'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.grey[100],
-                              foregroundColor: Colors.black,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                              elevation: 0,
-                            ),
+                          Column(
+                            children: [
+                              Text(
+                                state.todayOrders.toString(),
+                                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                              const Text('Pedidos'),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 10),
+              const SizedBox(height: 10),
 
-            // Estatísticas
-            Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 4,
-                  children: [
-                    const Text('Estatísticas', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        const Expanded(
-                          child: Text('Total de Vendas: ', style: TextStyle(fontWeight: FontWeight.bold)),
+              // Ações Rápidas
+              Card(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Ações Rápidas', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                      const SizedBox(height: 10),
+                      ElevatedButton.icon(
+                        onPressed: () => context.go('/sales/form'),
+                        icon: const Icon(Icons.add),
+                        label: const Text('Nova Venda'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF248f3d),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          minimumSize: const Size(double.infinity, 45),
                         ),
-                        Text(state.totalSales.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Expanded(
-                          child: Text('Total de Clientes: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                        ),
-                        Text(state.totalCustomers.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Expanded(
-                          child: Text('Total de Produtos: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                        ),
-                        Text(state.totalProducts.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Expanded(
-                          child: Text('Vendas Pendentes: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                        ),
-                        Text(state.pendingSales.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                  ],
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              onPressed: () => context.go('/products'),
+                              icon: const Icon(Icons.inventory_2),
+                              label: const Text('Produtos'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.grey[100],
+                                foregroundColor: Colors.black,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                elevation: 0,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              onPressed: () => context.go('/customers'),
+                              icon: const Icon(Icons.people),
+                              label: const Text('Clientes'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.grey[100],
+                                foregroundColor: Colors.black,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                elevation: 0,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 10),
+
+              // Estatísticas
+              Card(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Estatísticas', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          const Expanded(
+                            child: Text('Total de Vendas: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                          ),
+                          Text(state.totalSales.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          const Expanded(
+                            child: Text('Total de Clientes: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                          ),
+                          Text(state.totalCustomers.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          const Expanded(
+                            child: Text('Total de Produtos: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                          ),
+                          Text(state.totalProducts.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          const Expanded(
+                            child: Text('Vendas Pendentes: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                          ),
+                          Text(state.pendingSales.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

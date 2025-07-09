@@ -28,6 +28,13 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
       initialDate: isStartDate ? _startDate : _endDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
+      selectableDayPredicate: (DateTime val) {
+        if (isStartDate) {
+          return val.isBefore(_endDate.add(const Duration(days: 1)));
+        } else {
+          return val.isAfter(_startDate.subtract(const Duration(days: 1)));
+        }
+      },
     );
     if (picked != null && picked != (isStartDate ? _startDate : _endDate)) {
       setState(() {
@@ -63,14 +70,14 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
             Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
-                side: BorderSide(color: Colors.grey),
+                side: const BorderSide(color: Colors.grey),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Período', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    const Text('Período', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -78,7 +85,7 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Data Inícial', style: TextStyle(fontSize: 16)),
+                            const Text('Data Inícial', style: TextStyle(fontSize: 16)),
                             Container(
                               decoration: BoxDecoration(
                                 border: Border.all(color: Colors.grey),
@@ -101,7 +108,7 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Data Final', style: TextStyle(fontSize: 16)),
+                            const Text('Data Final', style: TextStyle(fontSize: 16)),
                             Container(
                               decoration: BoxDecoration(
                                 border: Border.all(color: Colors.grey),
@@ -147,12 +154,12 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
                                 width: size.width * 0.42,
                                 child: Column(
                                   children: [
-                                    Icon(Icons.attach_money, size: 32, color: Colors.green),
+                                    const Icon(Icons.attach_money, size: 32, color: Colors.green),
                                     Text(
                                       NumberFormat.simpleCurrency(locale: 'pt_BR').format(data.totalRevenue),
                                       style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                     ),
-                                    Text('Receita Total', style: TextStyle(fontSize: 16)),
+                                    const Text('Receita Total', style: TextStyle(fontSize: 16)),
                                   ],
                                 ),
                               ),
@@ -163,12 +170,12 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
                                 width: size.width * 0.42,
                                 child: Column(
                                   children: [
-                                    Icon(Icons.shopping_cart, size: 32, color: Colors.blue),
+                                    const Icon(Icons.shopping_cart, size: 32, color: Colors.blue),
                                     Text(
                                       data.totalSales.toString(),
-                                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                     ),
-                                    Text('Total de Vendas', style: TextStyle(fontSize: 16)),
+                                    const Text('Total de Vendas', style: TextStyle(fontSize: 16)),
                                   ],
                                 ),
                               ),
@@ -182,7 +189,7 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   'Status dos Pagamentos',
                                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                 ),
@@ -192,12 +199,12 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
                                     Container(
                                       width: 12,
                                       height: 12,
-                                      decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.green),
-                                      margin: EdgeInsets.only(right: 8),
+                                      decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.green),
+                                      margin: const EdgeInsets.only(right: 8),
                                     ),
-                                    Text('Vendas Pagas', style: TextStyle(fontSize: 16)),
-                                    Spacer(),
-                                    Text(data.paidSales.toString(), style: TextStyle(fontSize: 16)),
+                                    const Text('Vendas Pagas', style: TextStyle(fontSize: 16)),
+                                    const Spacer(),
+                                    Text(data.paidSales.toString(), style: const TextStyle(fontSize: 16)),
                                   ],
                                 ),
                                 const SizedBox(height: 8),
@@ -206,22 +213,22 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
                                     Container(
                                       width: 12,
                                       height: 12,
-                                      decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.orange),
-                                      margin: EdgeInsets.only(right: 8),
+                                      decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.orange),
+                                      margin: const EdgeInsets.only(right: 8),
                                     ),
-                                    Text('Vendas Pendentes', style: TextStyle(fontSize: 16)),
-                                    Spacer(),
-                                    Text(data.pendingSales.toString(), style: TextStyle(fontSize: 16)),
+                                    const Text('Vendas Pendentes', style: TextStyle(fontSize: 16)),
+                                    const Spacer(),
+                                    Text(data.pendingSales.toString(), style: const TextStyle(fontSize: 16)),
                                   ],
                                 ),
-                                Divider(),
+                                const Divider(),
                                 Row(
                                   children: [
-                                    Text('Ticket Médio', style: TextStyle(fontSize: 16)),
-                                    Spacer(),
+                                    const Text('Ticket Médio', style: TextStyle(fontSize: 16)),
+                                    const Spacer(),
                                     Text(
                                       NumberFormat.simpleCurrency(locale: 'pt_BR').format(data.averageTicket),
-                                      style: TextStyle(fontSize: 16),
+                                      style: const TextStyle(fontSize: 16),
                                     ),
                                   ],
                                 ),
@@ -235,9 +242,9 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         if (data.topProducts.isEmpty)
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: const Text('Nenhum produto vendido neste período.', style: TextStyle(fontSize: 16)),
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text('Nenhum produto vendido neste período.', style: TextStyle(fontSize: 16)),
                           ),
                         ...data.topProducts.map(
                           (p) => Card(
@@ -252,12 +259,9 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
                         const SizedBox(height: 20),
                         const Text('Melhores Clientes', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                         if (data.topCustomers.isEmpty)
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: const Text(
-                              'Nenhum cliente encontrado neste período.',
-                              style: TextStyle(fontSize: 16),
-                            ),
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text('Nenhum cliente encontrado neste período.', style: TextStyle(fontSize: 16)),
                           ),
                         ...data.topCustomers.map(
                           (c) => Card(
