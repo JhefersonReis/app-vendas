@@ -11,6 +11,34 @@ final customerByIdProvider = FutureProvider.family<CustomerModel, int>(
   (ref, id) => ref.read(customersServiceProvider).findById(id),
 );
 
+final customersFilterProvider = StateProvider<String>((ref) => '');
+
+final filteredCustomersProvider = Provider.autoDispose<List<CustomerModel>>((ref) {
+  final customersState = ref.watch(customersControllerProvider);
+  final filter = ref.watch(customersFilterProvider);
+
+  return customersState.when(
+    data: (customers) {
+      if (filter.isEmpty) {
+        return customers;
+      }
+
+      return customers.where((customer) {
+        final searchTerm = filter.toLowerCase();
+        final customerName = customer.name.toLowerCase();
+        final customerAddress = customer.address.toLowerCase();
+        final customerPhone = customer.phone.toLowerCase();
+
+        return customerName.contains(searchTerm) ||
+            customerAddress.contains(searchTerm) ||
+            customerPhone.contains(searchTerm);
+      }).toList();
+    },
+    loading: () => [],
+    error: (_, __) => [],
+  );
+});
+
 class CustomersController extends StateNotifier<AsyncValue<List<CustomerModel>>> {
   final CustomersService _service;
 
