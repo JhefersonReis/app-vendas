@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:organik_vendas/src/app/helpers/toast_helper.dart';
 import 'package:organik_vendas/src/features/customers/controller/customers_controller.dart';
 import 'package:organik_vendas/src/features/products/controller/product_controller.dart';
 import 'package:organik_vendas/src/features/products/domain/product_model.dart';
@@ -115,7 +116,12 @@ class _SaleFormState extends ConsumerState<_SaleForm> {
 
   void _saveSale() {
     if (_selectedCustomerId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Selecione um cliente')));
+      ToastHelper.showError(context, 'Selecione um cliente');
+      return;
+    }
+
+    if (_items.isEmpty) {
+      ToastHelper.showError(context, 'Adicione pelo menos um produto');
       return;
     }
 
