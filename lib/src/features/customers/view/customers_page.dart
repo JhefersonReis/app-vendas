@@ -22,7 +22,7 @@ class CustomersPage extends ConsumerWidget {
         backgroundColor: const Color(0xFF248f3d),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(16),
         child: customers.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, stackTrace) => Center(child: Text('Erro ao carregar: $error')),
