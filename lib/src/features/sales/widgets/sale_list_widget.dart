@@ -14,13 +14,16 @@ class SaleListWidget extends ConsumerWidget {
     return Column(
       children: [
         Row(
+          spacing: 12,
           children: [
             Expanded(
               child: TextField(
                 decoration: InputDecoration(
                   hintText: 'Pesquisar',
-                  prefixIcon: const Icon(Icons.search),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                  prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
+                  filled: true,
+                  fillColor: Colors.grey[200],
                 ),
                 onTapOutside: (_) => FocusScope.of(context).unfocus(),
                 onChanged: (value) {
@@ -28,21 +31,23 @@ class SaleListWidget extends ConsumerWidget {
                 },
               ),
             ),
-            const SizedBox(width: 8),
-            PopupMenuButton(
-              offset: Offset(0, 30),
-              tooltip: 'Filtrar por',
-              itemBuilder: (context) {
-                return [
-                  PopupMenuItem(value: SalesStatusFilter.all, child: Text('Todas')),
-                  PopupMenuItem(value: SalesStatusFilter.unpaid, child: Text('Pendentes')),
-                  PopupMenuItem(value: SalesStatusFilter.paid, child: Text('Pagas')),
-                ];
-              },
-              onSelected: (value) {
-                ref.read(salesStatusFilterProvider.notifier).state = value;
-              },
-              child: Icon(Icons.filter_list),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: PopupMenuButton(
+                offset: Offset(0, 30),
+                tooltip: 'Filtrar por',
+                itemBuilder: (context) {
+                  return [
+                    PopupMenuItem(value: SalesStatusFilter.all, child: Text('Todas')),
+                    PopupMenuItem(value: SalesStatusFilter.unpaid, child: Text('Pendentes')),
+                    PopupMenuItem(value: SalesStatusFilter.paid, child: Text('Pagas')),
+                  ];
+                },
+                onSelected: (value) {
+                  ref.read(salesStatusFilterProvider.notifier).state = value;
+                },
+                child: Icon(Icons.filter_list),
+              ),
             ),
           ],
         ),

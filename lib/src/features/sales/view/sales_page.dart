@@ -24,14 +24,7 @@ class SalesPage extends ConsumerWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: salesState.when(
-          data: (data) {
-            // Se não temos vendas no estado original (não filtrado), mostramos o widget vazio
-            if (data.isEmpty) {
-              return const SaleEmptyWidget();
-            }
-            // Caso contrário, mostramos o SaleListWidget que vai exibir as vendas filtradas
-            return const SaleListWidget();
-          },
+          data: (data) => data.isEmpty ? SaleEmptyWidget() : SaleListWidget(),
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (e, s) => Center(child: Text('Erro ao carregar vendas: $e')),
         ),

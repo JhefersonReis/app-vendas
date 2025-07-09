@@ -11,6 +11,31 @@ final productByIdProvider = FutureProvider.family<ProductModel, int>(
   (ref, id) => ref.read(productServiceProvider).findById(id),
 );
 
+final productsFilterProvider = StateProvider<String>((ref) => '');
+
+final filteredProductsProvider = Provider.autoDispose<List<ProductModel>>((ref) {
+  final productsState = ref.watch(productsControllerProvider);
+  final filter = ref.watch(productsFilterProvider);
+
+  return productsState.when(
+    data: (products) {
+      if (filter.isEmpty) {
+        return products;
+      }
+
+      return products.where((product) {
+        final searchTerm = filter.toLowerCase();
+        final productName = product.name.toLowerCase();
+        final productDescription = product.description.toLowerCase();
+
+        return productName.contains(searchTerm) || productDescription.contains(searchTerm);
+      }).toList();
+    },
+    loading: () => [],
+    error: (_, __) => [],
+  );
+});
+
 class ProductController extends StateNotifier<AsyncValue<List<ProductModel>>> {
   final ProductService _service;
 
