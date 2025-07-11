@@ -15,7 +15,7 @@ class ProductListWidget extends ConsumerWidget {
       children: [
         TextField(
           decoration: InputDecoration(
-            hintText: 'Pesquisar produtos',
+            hintText: 'Pesquisar',
             prefixIcon: const Icon(Icons.search, color: Colors.grey),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
             filled: true,

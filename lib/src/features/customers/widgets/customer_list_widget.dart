@@ -14,7 +14,7 @@ class CustomerListWidget extends ConsumerWidget {
       children: [
         TextField(
           decoration: InputDecoration(
-            hintText: 'Pesquisar clientes',
+            hintText: 'Pesquisar',
             prefixIcon: const Icon(Icons.search, color: Colors.grey),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
             filled: true,
@@ -25,6 +25,7 @@ class CustomerListWidget extends ConsumerWidget {
             ref.read(customersFilterProvider.notifier).state = value;
           },
         ),
+        const SizedBox(height: 10),
         Expanded(
           child: customers.isEmpty
               ? const Center(

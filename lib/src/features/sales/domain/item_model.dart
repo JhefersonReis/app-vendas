@@ -60,4 +60,29 @@ class ItemModel {
       weightUnit: weightUnit ?? this.weightUnit,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is ItemModel &&
+        other.productId == productId &&
+        other.productName == productName &&
+        other.quantity == quantity &&
+        other.unitPrice == unitPrice &&
+        other.totalPrice == totalPrice &&
+        other.weight == weight &&
+        other.weightUnit == weightUnit;
+  }
+
+  @override
+  int get hashCode {
+    return productId.hashCode ^
+        productName.hashCode ^
+        quantity.hashCode ^
+        unitPrice.hashCode ^
+        totalPrice.hashCode ^
+        weight.hashCode ^
+        weightUnit.hashCode;
+  }
 }

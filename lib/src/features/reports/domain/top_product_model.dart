@@ -10,4 +10,21 @@ class TopProduct {
     required this.quantitySold,
     required this.totalRevenue,
   });
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is TopProduct &&
+        other.product == product &&
+        other.quantitySold == quantitySold &&
+        other.totalRevenue == totalRevenue;
+  }
+
+  @override
+  int get hashCode {
+    return product.hashCode ^
+        quantitySold.hashCode ^
+        totalRevenue.hashCode;
+  }
 }

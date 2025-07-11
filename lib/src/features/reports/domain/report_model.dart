@@ -19,4 +19,29 @@ class ReportData {
     required this.topProducts,
     required this.topCustomers,
   });
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is ReportData &&
+        other.totalRevenue == totalRevenue &&
+        other.totalSales == totalSales &&
+        other.paidSales == paidSales &&
+        other.pendingSales == pendingSales &&
+        other.averageTicket == averageTicket &&
+        other.topProducts == topProducts &&
+        other.topCustomers == topCustomers;
+  }
+
+  @override
+  int get hashCode {
+    return totalRevenue.hashCode ^
+        totalSales.hashCode ^
+        paidSales.hashCode ^
+        pendingSales.hashCode ^
+        averageTicket.hashCode ^
+        topProducts.hashCode ^
+        topCustomers.hashCode;
+  }
 }

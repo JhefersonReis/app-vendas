@@ -74,4 +74,33 @@ class SaleModel {
       createdAt: createdAt ?? this.createdAt,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is SaleModel &&
+        other.id == id &&
+        other.customerId == customerId &&
+        other.customerName == customerName &&
+        other.saleDate == saleDate &&
+        other.items == items &&
+        other.total == total &&
+        other.isPaid == isPaid &&
+        other.observation == observation &&
+        other.createdAt == createdAt;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        customerId.hashCode ^
+        customerName.hashCode ^
+        saleDate.hashCode ^
+        items.hashCode ^
+        total.hashCode ^
+        isPaid.hashCode ^
+        observation.hashCode ^
+        createdAt.hashCode;
+  }
 }

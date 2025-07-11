@@ -60,4 +60,29 @@ class CustomerModel {
       createdAt: createdAt ?? this.createdAt,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is CustomerModel &&
+        other.id == id &&
+        other.name == name &&
+        other.address == address &&
+        other.phone == phone &&
+        other.countryISOCode == countryISOCode &&
+        other.observation == observation &&
+        other.createdAt == createdAt;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        name.hashCode ^
+        address.hashCode ^
+        phone.hashCode ^
+        countryISOCode.hashCode ^
+        observation.hashCode ^
+        createdAt.hashCode;
+  }
 }

@@ -60,4 +60,29 @@ class ProductModel {
       createdAt: createdAt ?? this.createdAt,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is ProductModel &&
+        other.id == id &&
+        other.name == name &&
+        other.price == price &&
+        other.weight == weight &&
+        other.weightUnit == weightUnit &&
+        other.description == description &&
+        other.createdAt == createdAt;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        name.hashCode ^
+        price.hashCode ^
+        weight.hashCode ^
+        weightUnit.hashCode ^
+        description.hashCode ^
+        createdAt.hashCode;
+  }
 }
