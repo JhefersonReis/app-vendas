@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:organik_vendas/l10n/app_localizations.dart';
 import 'package:organik_vendas/src/app/helpers/toast_helper.dart';
 import 'package:organik_vendas/src/features/customers/controller/customers_controller.dart';
 import 'package:organik_vendas/src/features/products/controller/product_controller.dart';
@@ -156,11 +157,12 @@ class _SaleFormState extends ConsumerState<_SaleForm> {
   Widget build(BuildContext context) {
     final customers = ref.watch(customersControllerProvider);
     final products = ref.watch(productsControllerProvider);
+    final localization = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.id != null ? "Editar Venda" : "Nova Venda",
+          widget.id != null ? localization.editSale : localization.newSale,
           style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -173,13 +175,13 @@ class _SaleFormState extends ConsumerState<_SaleForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text.rich(
+              Text.rich(
                 TextSpan(
-                  text: "Cliente ",
+                  text: localization.customer,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   children: [
                     TextSpan(
-                      text: "*",
+                      text: " *",
                       style: TextStyle(color: Colors.red),
                     ),
                   ],
@@ -201,7 +203,7 @@ class _SaleFormState extends ConsumerState<_SaleForm> {
                         ),
                       )
                       .toList(),
-                  decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Selecione um cliente'),
+                  decoration: InputDecoration(border: OutlineInputBorder(), hintText: localization.selectACustomer),
                   menuMaxHeight: 200,
                   isExpanded: true,
                   selectedItemBuilder: (BuildContext context) {
@@ -219,22 +221,22 @@ class _SaleFormState extends ConsumerState<_SaleForm> {
                 error: (e, s) => const Center(child: Text('Erro ao carregar clientes')),
               ),
               const SizedBox(height: 16),
-              const Text.rich(
+              Text.rich(
                 TextSpan(
-                  text: "Data da Venda ",
+                  text: localization.dateOfSale,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   children: [
                     TextSpan(
-                      text: "*",
+                      text: " *",
                       style: TextStyle(color: Colors.red),
                     ),
                   ],
                 ),
               ),
               TextField(
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: "Selecione uma data",
+                  hintText: localization.selectADate,
                   suffixIcon: Icon(Icons.calendar_month),
                 ),
                 onTap: _showDatePicker,
@@ -244,8 +246,8 @@ class _SaleFormState extends ConsumerState<_SaleForm> {
               const SizedBox(height: 16),
               Row(
                 children: [
-                  const Expanded(
-                    child: Text("Itens da Venda ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                  Expanded(
+                    child: Text(localization.saleItems, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                   ),
                   IconButton(
                     onPressed: () => _showAddProductDialog(products.asData?.value ?? []),
@@ -279,7 +281,7 @@ class _SaleFormState extends ConsumerState<_SaleForm> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("Total da Venda:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                    Text("${localization.totalSale}:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                     const Spacer(),
                     Text(
                       NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$', decimalDigits: 2).format(_total),
@@ -299,16 +301,16 @@ class _SaleFormState extends ConsumerState<_SaleForm> {
                       });
                     },
                   ),
-                  const Text("Venda já foi paga"),
+                  Text(localization.saleAlreadyPaid),
                 ],
               ),
               const SizedBox(height: 16),
-              const Text('Observações', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+              Text(localization.observations, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
               TextField(
                 controller: _notesController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: "Observações sobre a venda",
+                  hintText: localization.saleNotes,
                   hintStyle: TextStyle(color: Colors.grey),
                 ),
                 maxLines: 3,
@@ -327,7 +329,7 @@ class _SaleFormState extends ConsumerState<_SaleForm> {
                     const Icon(Icons.save, color: Colors.white),
                     const SizedBox(width: 8),
                     Text(
-                      '${widget.id == null ? 'Cadastrar' : 'Atualizar'} Venda',
+                      widget.id == null ? localization.createSale : localization.updateSale,
                       style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                   ],
@@ -340,86 +342,92 @@ class _SaleFormState extends ConsumerState<_SaleForm> {
     );
   }
 
-  void _showAddProductDialog(List<ProductModel> products) {
+  void _showAddProductDialog(List<ProductModel> products) async {
     ProductModel? selectedProduct;
     final quantityController = TextEditingController(text: '1');
 
-    showDialog(
+    await showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Adicionar Produto'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            DropdownButtonFormField<ProductModel>(
-              onChanged: (value) {
-                selectedProduct = value;
-              },
-              items: products
-                  .map(
-                    (product) => DropdownMenuItem(
-                      value: product,
-                      child: Row(
-                        children: [
-                          product.name.length > 25
-                              ? Expanded(child: Text(product.name, overflow: TextOverflow.ellipsis))
-                              : Text(product.name),
-                          Text(
-                            ' - ${product.weightUnit == 'g' ? product.weight.toStringAsFixed(0) : product.weight.toStringAsFixed(1)}${product.weightUnit}',
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                  .toList(),
-              decoration: const InputDecoration(border: OutlineInputBorder(), labelText: 'Selecione um produto'),
-              selectedItemBuilder: (BuildContext context) {
-                final size = MediaQuery.of(context).size;
-                final maxWidth = size.width * 0.5;
+      builder: (dialogContext) => Consumer(
+        builder: (context, ref, child) {
+          final localization = AppLocalizations.of(dialogContext)!;
 
-                return products.map<Widget>((product) {
-                  return Container(
-                    constraints: BoxConstraints(maxWidth: maxWidth),
-                    child: Text(
-                      product.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 14), // Smaller font size
-                    ),
-                  );
-                }).toList();
-              },
+          return AlertDialog(
+            title: Text(localization.addProduct),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                DropdownButtonFormField<ProductModel>(
+                  onChanged: (value) {
+                    selectedProduct = value;
+                  },
+                  items: products
+                      .map(
+                        (product) => DropdownMenuItem(
+                          value: product,
+                          child: Row(
+                            children: [
+                              product.name.length > 25
+                                  ? Expanded(child: Text(product.name, overflow: TextOverflow.ellipsis))
+                                  : Text(product.name),
+                              Text(
+                                ' - ${product.weightUnit == 'g' ? product.weight.toStringAsFixed(0) : product.weight.toStringAsFixed(1)}${product.weightUnit}',
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  decoration: InputDecoration(border: OutlineInputBorder(), labelText: localization.selectAProduct),
+                  selectedItemBuilder: (BuildContext context) {
+                    final size = MediaQuery.of(context).size;
+                    final maxWidth = size.width * 0.5;
+
+                    return products.map<Widget>((product) {
+                      return Container(
+                        constraints: BoxConstraints(maxWidth: maxWidth),
+                        child: Text(
+                          product.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                      );
+                    }).toList();
+                  },
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: quantityController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(border: OutlineInputBorder(), labelText: localization.quantity),
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: quantityController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(border: OutlineInputBorder(), labelText: 'Quantidade'),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancelar')),
-          ElevatedButton(
-            onPressed: () {
-              if (selectedProduct != null) {
-                final quantity = int.tryParse(quantityController.text) ?? 1;
-                final item = ItemModel(
-                  productId: selectedProduct!.id,
-                  productName: selectedProduct!.name,
-                  quantity: quantity,
-                  unitPrice: selectedProduct!.price,
-                  totalPrice: selectedProduct!.price * quantity,
-                  weight: selectedProduct!.weight,
-                  weightUnit: selectedProduct!.weightUnit,
-                );
-                _addItem(item);
-                Navigator.of(context).pop();
-              }
-            },
-            child: const Text('Adicionar'),
-          ),
-        ],
+            actions: [
+              TextButton(onPressed: () => Navigator.of(dialogContext).pop(), child: Text(localization.cancel)),
+              ElevatedButton(
+                onPressed: () {
+                  if (selectedProduct != null) {
+                    final quantity = int.tryParse(quantityController.text) ?? 1;
+                    final item = ItemModel(
+                      productId: selectedProduct!.id,
+                      productName: selectedProduct!.name,
+                      quantity: quantity,
+                      unitPrice: selectedProduct!.price,
+                      totalPrice: selectedProduct!.price * quantity,
+                      weight: selectedProduct!.weight,
+                      weightUnit: selectedProduct!.weightUnit,
+                    );
+                    _addItem(item);
+                    Navigator.of(dialogContext).pop();
+                  }
+                },
+                child: Text(localization.add),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

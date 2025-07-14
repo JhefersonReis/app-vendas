@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:organik_vendas/l10n/app_localizations.dart';
 
-class SaleEmptyWidget extends StatelessWidget {
+class SaleEmptyWidget extends ConsumerWidget {
   const SaleEmptyWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final localization = AppLocalizations.of(context)!;
+
     return Center(
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -16,8 +20,8 @@ class SaleEmptyWidget extends StatelessWidget {
             children: [
               const Icon(Icons.shopping_bag_outlined, size: 50, color: Colors.grey),
               const SizedBox(height: 10),
-              const Text('Nenhuma venda registrada', style: TextStyle(fontWeight: FontWeight.bold)),
-              const Text('Comece registrando sua primeira venda'),
+              Text(localization.noSalesRecorded, style: TextStyle(fontWeight: FontWeight.bold)),
+              Text(localization.startByRecordingYourFirstSale),
               const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () => context.go('/sales/form'),
@@ -26,7 +30,7 @@ class SaleEmptyWidget extends StatelessWidget {
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 ),
-                child: const Text('Registrar Primeira Venda'),
+                child: Text(localization.registerFirstSale),
               ),
             ],
           ),

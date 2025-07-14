@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:organik_vendas/l10n/app_localizations.dart';
 import 'package:organik_vendas/src/features/home/controller/home_controller.dart';
+import 'package:organik_vendas/src/features/home/widgets/language_selector_widget.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -23,16 +25,18 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(homeControllerProvider);
+    final localization = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: const Text(
-          'Controle de Vendas',
+        title: Text(
+          localization.homeTitle,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         backgroundColor: const Color(0xFF248f3d),
+        actions: [LanguageSelectorWidget()],
       ),
       body: RefreshIndicator(
         onRefresh: () => ref.read(homeControllerProvider.notifier).loadData(),
@@ -50,8 +54,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Resumo de Hoje',
+                      Text(
+                        localization.todaySummary,
                         style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green, fontSize: 18),
                       ),
                       const SizedBox(height: 10),
@@ -64,7 +68,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 NumberFormat.simpleCurrency(locale: 'pt_BR').format(state.totalSoldToday),
                                 style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                               ),
-                              const Text('Total Vendido'),
+                              Text(localization.totalSold),
                             ],
                           ),
                           Column(
@@ -73,7 +77,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 state.todayOrders.toString(),
                                 style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                               ),
-                              const Text('Pedidos'),
+                              Text(localization.orders),
                             ],
                           ),
                         ],
@@ -92,12 +96,12 @@ class _HomePageState extends ConsumerState<HomePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Ações Rápidas', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                      Text(localization.quickActions, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                       const SizedBox(height: 10),
                       ElevatedButton.icon(
                         onPressed: () => context.go('/sales/form'),
                         icon: const Icon(Icons.add),
-                        label: const Text('Nova Venda'),
+                        label: Text(localization.newSale),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF248f3d),
                           foregroundColor: Colors.white,
@@ -112,7 +116,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                             child: ElevatedButton.icon(
                               onPressed: () => context.go('/products'),
                               icon: const Icon(Icons.inventory_2),
-                              label: const Text('Produtos'),
+                              label: Text(localization.products),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.grey[100],
                                 foregroundColor: Colors.black,
@@ -126,7 +130,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                             child: ElevatedButton.icon(
                               onPressed: () => context.go('/customers'),
                               icon: const Icon(Icons.people),
-                              label: const Text('Clientes'),
+                              label: Text(localization.customers),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.grey[100],
                                 foregroundColor: Colors.black,
@@ -151,36 +155,48 @@ class _HomePageState extends ConsumerState<HomePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Estatísticas', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                      Text(localization.statistics, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                       const SizedBox(height: 10),
                       Row(
                         children: [
-                          const Expanded(
-                            child: Text('Total de Vendas: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                          Expanded(
+                            child: Text(
+                              '${localization.salesQuantity}: ',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                           ),
                           Text(state.totalSales.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
                         ],
                       ),
                       Row(
                         children: [
-                          const Expanded(
-                            child: Text('Total de Clientes: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                          Expanded(
+                            child: Text(
+                              '${localization.customersQuantity}: ',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                           ),
                           Text(state.totalCustomers.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
                         ],
                       ),
                       Row(
                         children: [
-                          const Expanded(
-                            child: Text('Total de Produtos: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                          Expanded(
+                            child: Text(
+                              '${localization.productsQuantity}: ',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                           ),
                           Text(state.totalProducts.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
                         ],
                       ),
                       Row(
                         children: [
-                          const Expanded(
-                            child: Text('Vendas Pendentes: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                          Expanded(
+                            child: Text(
+                              '${localization.pendingSales}: ',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                           ),
                           Text(state.pendingSales.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
                         ],

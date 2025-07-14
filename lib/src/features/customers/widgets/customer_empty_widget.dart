@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:organik_vendas/l10n/app_localizations.dart';
 
 class CustomerEmptyWidget extends StatelessWidget {
   const CustomerEmptyWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context)!;
+
     return Center(
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -16,9 +19,9 @@ class CustomerEmptyWidget extends StatelessWidget {
             children: [
               const Icon(Icons.people_outline, size: 50, color: Colors.grey),
               const SizedBox(height: 10),
-              const Text('Nenhum cliente cadastrado', style: TextStyle(fontWeight: FontWeight.bold)),
-              const Text(
-                'Cadastre seus clientes para agilizar as vendas',
+              Text(localization.noRegisteredCustomers, style: TextStyle(fontWeight: FontWeight.bold)),
+              Text(
+                localization.registerYourCustomersToMakeSales,
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.grey),
               ),
@@ -30,7 +33,7 @@ class CustomerEmptyWidget extends StatelessWidget {
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 ),
-                child: const Text('Adicionar Primeiro Cliente'),
+                child: Text(localization.addFirstCustomer),
               ),
             ],
           ),

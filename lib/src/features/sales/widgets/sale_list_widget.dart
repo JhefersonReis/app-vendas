@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:organik_vendas/l10n/app_localizations.dart';
 import 'package:organik_vendas/src/features/sales/controller/sales_controller.dart';
 
 class SaleListWidget extends ConsumerWidget {
@@ -10,6 +11,7 @@ class SaleListWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final filteredSales = ref.watch(filteredSalesProvider);
+    final localization = AppLocalizations.of(context)!;
 
     return Column(
       children: [
@@ -19,7 +21,7 @@ class SaleListWidget extends ConsumerWidget {
             Expanded(
               child: TextField(
                 decoration: InputDecoration(
-                  hintText: 'Pesquisar',
+                  hintText: localization.search,
                   prefixIcon: const Icon(Icons.search, color: Colors.grey),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
                   filled: true,
@@ -35,12 +37,12 @@ class SaleListWidget extends ConsumerWidget {
               padding: const EdgeInsets.all(8.0),
               child: PopupMenuButton(
                 offset: Offset(0, 30),
-                tooltip: 'Filtrar por',
+                tooltip: localization.filterBy,
                 itemBuilder: (context) {
                   return [
-                    PopupMenuItem(value: SalesStatusFilter.all, child: Text('Todas')),
-                    PopupMenuItem(value: SalesStatusFilter.unpaid, child: Text('Pendentes')),
-                    PopupMenuItem(value: SalesStatusFilter.paid, child: Text('Pagas')),
+                    PopupMenuItem(value: SalesStatusFilter.all, child: Text(localization.all)),
+                    PopupMenuItem(value: SalesStatusFilter.unpaid, child: Text(localization.pendings)),
+                    PopupMenuItem(value: SalesStatusFilter.paid, child: Text(localization.paids)),
                   ];
                 },
                 onSelected: (value) {
@@ -54,9 +56,9 @@ class SaleListWidget extends ConsumerWidget {
         const SizedBox(height: 8),
         Expanded(
           child: filteredSales.isEmpty
-              ? const Center(
+              ? Center(
                   child: Text(
-                    'Nenhuma venda encontrada com esse filtro',
+                    localization.noSalesFoundWithThisFilter,
                     style: TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                 )
@@ -67,9 +69,9 @@ class SaleListWidget extends ConsumerWidget {
                   child: ListView.builder(
                     itemCount: filteredSales.length,
                     itemBuilder: (context, index) {
-                      final venda = filteredSales[index];
+                      final sale = filteredSales[index];
                       return Dismissible(
-                        key: Key(venda.id.toString()),
+                        key: Key(sale.id.toString()),
                         direction: DismissDirection.endToStart,
                         background: Container(
                           alignment: Alignment.centerRight,
@@ -78,23 +80,23 @@ class SaleListWidget extends ConsumerWidget {
                           child: const Icon(Icons.delete, color: Colors.white),
                         ),
                         onDismissed: (_) {
-                          ref.read(salesControllerProvider.notifier).delete(venda.id);
+                          ref.read(salesControllerProvider.notifier).delete(sale.id);
                         },
                         confirmDismiss: (direction) async {
                           return await showDialog<bool>(
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: const Text('Excluir Venda'),
-                                content: const Text('Tem certeza que deseja excluir esta venda?'),
+                                title: Text(localization.deleteConfirmTitle),
+                                content: Text(localization.areYouSureYouWantToDeleteThisSale),
                                 actions: [
                                   TextButton(
                                     onPressed: () => Navigator.of(context).pop(false),
-                                    child: const Text('Cancelar'),
+                                    child: Text(localization.cancel),
                                   ),
                                   TextButton(
                                     onPressed: () => Navigator.of(context).pop(true),
-                                    child: const Text('Excluir', style: TextStyle(color: Colors.red)),
+                                    child: Text(localization.delete, style: TextStyle(color: Colors.red)),
                                   ),
                                 ],
                               );
@@ -116,12 +118,12 @@ class SaleListWidget extends ConsumerWidget {
                                       children: [
                                         const Icon(Icons.person, size: 18, color: Colors.grey),
                                         const SizedBox(width: 5),
-                                        Text(venda.customerName, style: const TextStyle(fontWeight: FontWeight.bold)),
+                                        Text(sale.customerName, style: const TextStyle(fontWeight: FontWeight.bold)),
                                       ],
                                     ),
                                     TextButton(
-                                      onPressed: () => context.go('/sales/form?id=${venda.id}'),
-                                      child: const Text('Ver Detalhes', style: TextStyle(color: Colors.green)),
+                                      onPressed: () => context.go('/sales/form?id=${sale.id}'),
+                                      child: Text(localization.seeDetails, style: TextStyle(color: Colors.green)),
                                     ),
                                   ],
                                 ),
@@ -130,7 +132,7 @@ class SaleListWidget extends ConsumerWidget {
                                   children: [
                                     const Icon(Icons.calendar_today, size: 18, color: Colors.grey),
                                     const SizedBox(width: 5),
-                                    Text(DateFormat('dd/MM/yyyy').format(venda.saleDate)),
+                                    Text(DateFormat('dd/MM/yyyy').format(sale.saleDate)),
                                   ],
                                 ),
                                 const SizedBox(height: 5),
@@ -139,7 +141,7 @@ class SaleListWidget extends ConsumerWidget {
                                     const Icon(Icons.attach_money, size: 18, color: Colors.grey),
                                     const SizedBox(width: 5),
                                     Text(
-                                      NumberFormat.simpleCurrency(locale: 'pt_BR').format(venda.total),
+                                      NumberFormat.simpleCurrency(locale: 'pt_BR').format(sale.total),
                                       style: const TextStyle(color: Colors.green),
                                     ),
                                   ],
@@ -148,20 +150,20 @@ class SaleListWidget extends ConsumerWidget {
                                 Row(
                                   children: [
                                     Icon(
-                                      venda.isPaid ? Icons.check_circle : Icons.warning,
+                                      sale.isPaid ? Icons.check_circle : Icons.warning,
                                       size: 18,
-                                      color: venda.isPaid ? Colors.green : Colors.orange,
+                                      color: sale.isPaid ? Colors.green : Colors.orange,
                                     ),
                                     const SizedBox(width: 5),
                                     Text(
-                                      venda.isPaid ? 'Pago' : 'Pendente',
-                                      style: TextStyle(color: venda.isPaid ? Colors.green : Colors.orange),
+                                      sale.isPaid ? localization.paid : localization.pending,
+                                      style: TextStyle(color: sale.isPaid ? Colors.green : Colors.orange),
                                     ),
                                   ],
                                 ),
                                 const SizedBox(height: 5),
                                 Text(
-                                  '${venda.items.length} item(s) - ${venda.items.fold(0, (int sum, item) => sum + item.quantity)} produto(s)',
+                                  '${sale.items.length} ${localization.item}(s) - ${sale.items.fold(0, (int sum, item) => sum + item.quantity)} ${localization.product}(s)',
                                 ),
                               ],
                             ),

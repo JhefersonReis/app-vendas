@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:organik_vendas/l10n/app_localizations.dart';
 import 'package:organik_vendas/src/features/customers/controller/customers_controller.dart';
 
 class CustomersFormPage extends ConsumerStatefulWidget {
@@ -91,10 +92,12 @@ class _CustomersFormPageState extends ConsumerState<CustomersFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.id != null ? "Editar Cliente" : "Novo Cliente",
+          widget.id != null ? localization.editCustomer : localization.newCustomer,
           style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -108,13 +111,13 @@ class _CustomersFormPageState extends ConsumerState<CustomersFormPage> {
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text.rich(
+                  Text.rich(
                     TextSpan(
-                      text: "Nome do Cliente ",
+                      text: localization.customerName,
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                       children: [
                         TextSpan(
-                          text: "*",
+                          text: " *",
                           style: TextStyle(color: Colors.red),
                         ),
                       ],
@@ -122,21 +125,21 @@ class _CustomersFormPageState extends ConsumerState<CustomersFormPage> {
                   ),
                   TextField(
                     controller: _nameController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      hintText: "Nome completo",
+                      hintText: localization.fullName,
                       hintStyle: TextStyle(color: Colors.grey),
                     ),
                     onTapOutside: (_) => FocusScope.of(context).unfocus(),
                   ),
                   const SizedBox(height: 16),
-                  const Text.rich(
+                  Text.rich(
                     TextSpan(
-                      text: "Telefone ",
+                      text: localization.phone,
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                       children: [
                         TextSpan(
-                          text: "*",
+                          text: " *",
                           style: TextStyle(color: Colors.red),
                         ),
                       ],
@@ -150,7 +153,7 @@ class _CustomersFormPageState extends ConsumerState<CustomersFormPage> {
                     ),
                     initialCountryCode: countryISOCode,
                     keyboardType: TextInputType.phone,
-                    invalidNumberMessage: 'Número de telefone inválido',
+                    invalidNumberMessage: localization.invalidPhoneNumber,
                     inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
                     onCountryChanged: (value) {
                       log(value.code);
@@ -158,13 +161,13 @@ class _CustomersFormPageState extends ConsumerState<CustomersFormPage> {
                     },
                   ),
                   const SizedBox(height: 8),
-                  const Text.rich(
+                  Text.rich(
                     TextSpan(
-                      text: "Endereço Completo ",
+                      text: localization.fullAddress,
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                       children: [
                         TextSpan(
-                          text: "*",
+                          text: " *",
                           style: TextStyle(color: Colors.red),
                         ),
                       ],
@@ -174,15 +177,14 @@ class _CustomersFormPageState extends ConsumerState<CustomersFormPage> {
                     controller: _addressController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      hintText: "Rua, Bairro, Cidade, Estado, CEP",
                       hintStyle: TextStyle(color: Colors.grey),
                     ),
                     onTapOutside: (_) => FocusScope.of(context).unfocus(),
                   ),
                   const SizedBox(height: 16),
-                  const Text.rich(
+                  Text.rich(
                     TextSpan(
-                      text: "Observação ",
+                      text: localization.observations,
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                     ),
                   ),
@@ -190,7 +192,6 @@ class _CustomersFormPageState extends ConsumerState<CustomersFormPage> {
                     controller: _observationController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      hintText: "Ex: Cliente que sempre compra na terça-feira",
                       hintStyle: TextStyle(color: Colors.grey),
                     ),
                     maxLines: 3,
@@ -210,7 +211,7 @@ class _CustomersFormPageState extends ConsumerState<CustomersFormPage> {
                         const Icon(Icons.save, color: Colors.white),
                         const SizedBox(width: 8),
                         Text(
-                          '${widget.id == null ? 'Cadastrar' : 'Atualizar'} Cliente',
+                          widget.id == null ? localization.createCustomer : localization.updateCustomer,
                           style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                       ],

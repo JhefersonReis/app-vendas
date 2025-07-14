@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:organik_vendas/l10n/app_localizations.dart';
 
-class MainPage extends StatelessWidget {
+class MainPage extends ConsumerWidget {
   final StatefulNavigationShell navigationShell;
 
   const MainPage({super.key, required this.navigationShell});
@@ -11,7 +13,9 @@ class MainPage extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final localization = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: BottomNavigationBar(
@@ -20,12 +24,12 @@ class MainPage extends StatelessWidget {
         unselectedItemColor: Colors.grey,
         currentIndex: navigationShell.currentIndex,
         onTap: _goBranch,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Início'),
-          BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: 'Vendas'),
-          BottomNavigationBarItem(icon: Icon(Icons.inventory_2), label: 'Produtos'),
-          BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Clientes'),
-          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Relatórios'),
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: localization.homeBottomNavigationTitle),
+          BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: localization.salesBottomNavigationTitle),
+          BottomNavigationBarItem(icon: Icon(Icons.inventory_2), label: localization.productsBottomNavigationTitle),
+          BottomNavigationBarItem(icon: Icon(Icons.people), label: localization.customersBottomNavigationTitle),
+          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: localization.reportsBottomNavigationTitle),
         ],
       ),
     );

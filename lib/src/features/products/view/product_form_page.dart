@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:organik_vendas/l10n/app_localizations.dart';
 import 'package:organik_vendas/src/features/products/controller/product_controller.dart';
 
 class ProductFormPage extends ConsumerStatefulWidget {
@@ -95,11 +96,12 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final localization = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.id == null ? 'Novo Produto' : 'Editar Produto',
+          widget.id == null ? localization.newProduct : localization.editProduct,
           style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -111,13 +113,13 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text.rich(
+            Text.rich(
               TextSpan(
-                text: "Nome do Produto ",
+                text: localization.productName,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 children: [
                   TextSpan(
-                    text: "*",
+                    text: " *",
                     style: TextStyle(color: Colors.red),
                   ),
                 ],
@@ -125,7 +127,7 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
             ),
             TextField(
               controller: productName,
-              decoration: const InputDecoration(hintText: 'Digite o nome do produto', border: OutlineInputBorder()),
+              decoration: InputDecoration(hintText: localization.enterTheProductName, border: OutlineInputBorder()),
               onTapOutside: (_) => FocusScope.of(context).unfocus(),
             ),
             const SizedBox(height: 16),
@@ -136,9 +138,9 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text.rich(
+                      Text.rich(
                         TextSpan(
-                          text: "Preço (R\$) ",
+                          text: "${localization.price} (R\$) ",
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                           children: [
                             TextSpan(
@@ -171,13 +173,13 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text.rich(
+                      Text.rich(
                         TextSpan(
-                          text: "Peso ",
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          text: localization.weight,
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           children: [
                             TextSpan(
-                              text: "*",
+                              text: " *",
                               style: TextStyle(color: Colors.red),
                             ),
                           ],
@@ -185,7 +187,7 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                       ),
                       TextField(
                         controller: productWeight,
-                        decoration: const InputDecoration(hintText: '1', border: OutlineInputBorder()),
+                        decoration: const InputDecoration(hintText: '0', border: OutlineInputBorder()),
                         onTapOutside: (_) => FocusScope.of(context).unfocus(),
                       ),
                     ],
@@ -219,19 +221,16 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
               ],
             ),
             const SizedBox(height: 16),
-            const Text.rich(
+            Text.rich(
               TextSpan(
-                text: "Descrição ",
+                text: localization.description,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                children: [TextSpan(text: "(opcional)", style: TextStyle(fontSize: 12))],
+                children: [TextSpan(text: " (${localization.optional})", style: TextStyle(fontSize: 12))],
               ),
             ),
             TextField(
               controller: productDescription,
-              decoration: const InputDecoration(
-                hintText: 'Digite a descrição do produto',
-                border: OutlineInputBorder(),
-              ),
+              decoration: InputDecoration(hintText: localization.productNote, border: OutlineInputBorder()),
               maxLines: 3,
               onTapOutside: (_) => FocusScope.of(context).unfocus(),
             ),
@@ -249,7 +248,7 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                   const Icon(Icons.save, color: Colors.white),
                   const SizedBox(width: 8),
                   Text(
-                    '${widget.id == null ? 'Cadastrar' : 'Atualizar'} Produto',
+                    widget.id == null ? localization.createProduct : localization.updateProduct,
                     style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                 ],

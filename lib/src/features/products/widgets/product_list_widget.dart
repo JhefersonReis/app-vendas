@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:organik_vendas/l10n/app_localizations.dart';
 import 'package:organik_vendas/src/features/products/controller/product_controller.dart';
 
 class ProductListWidget extends ConsumerWidget {
@@ -10,12 +11,13 @@ class ProductListWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final filteredProducts = ref.watch(filteredProductsProvider);
+    final localization = AppLocalizations.of(context)!;
 
     return Column(
       children: [
         TextField(
           decoration: InputDecoration(
-            hintText: 'Pesquisar',
+            hintText: localization.search,
             prefixIcon: const Icon(Icons.search, color: Colors.grey),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
             filled: true,
@@ -29,9 +31,9 @@ class ProductListWidget extends ConsumerWidget {
         const SizedBox(height: 10),
         Expanded(
           child: filteredProducts.isEmpty
-              ? const Center(
+              ? Center(
                   child: Text(
-                    'Nenhum produto encontrado com esse filtro',
+                    localization.noProductsFoundWithThisFilter,
                     style: TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                 )
@@ -60,17 +62,17 @@ class ProductListWidget extends ConsumerWidget {
                           return await showDialog(
                             context: context,
                             builder: (context) => AlertDialog(
-                              title: const Text('Confirmar exclusão'),
-                              content: const Text('Deseja realmente excluir este produto?'),
+                              title: Text(localization.deleteConfirmTitle),
+                              content: Text(localization.areYouSureYouWantToDeleteThisProduct),
                               actions: [
                                 TextButton(
                                   onPressed: () => Navigator.of(context).pop(false),
-                                  child: const Text('Cancelar'),
+                                  child: Text(localization.cancel),
                                 ),
                                 TextButton(
                                   onPressed: () => Navigator.of(context).pop(true),
                                   style: TextButton.styleFrom(foregroundColor: Colors.red),
-                                  child: const Text('Excluir'),
+                                  child: Text(localization.delete),
                                 ),
                               ],
                             ),
@@ -115,7 +117,7 @@ class ProductListWidget extends ConsumerWidget {
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(
-                                      'Observação: ${product.description}',
+                                      '${localization.observations}: ${product.description}',
                                       style: const TextStyle(color: Colors.grey),
                                     ),
                                   ),

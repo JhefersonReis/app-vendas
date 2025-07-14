@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:organik_vendas/l10n/app_localizations.dart';
 
-class ProductEmptyWidget extends StatelessWidget {
+class ProductEmptyWidget extends ConsumerWidget {
   const ProductEmptyWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final localization = AppLocalizations.of(context)!;
+
     return Center(
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -16,9 +20,9 @@ class ProductEmptyWidget extends StatelessWidget {
             children: [
               const Icon(Icons.inventory_2, size: 50, color: Colors.grey),
               const SizedBox(height: 10),
-              const Text('Nenhum produto cadastrado', style: TextStyle(fontWeight: FontWeight.bold)),
-              const Text(
-                'Comece adicionando seus produtos\npara facilitar as vendas',
+              Text(localization.noProductsRegistered, style: TextStyle(fontWeight: FontWeight.bold)),
+              Text(
+                localization.startAddingYourProductsToMakeSellingEasier,
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.grey),
               ),
@@ -30,7 +34,7 @@ class ProductEmptyWidget extends StatelessWidget {
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 ),
-                child: const Text('Adicionar Primeiro Produto'),
+                child: Text(localization.addFirstProduct),
               ),
             ],
           ),

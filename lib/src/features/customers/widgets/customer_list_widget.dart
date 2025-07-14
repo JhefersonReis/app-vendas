@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:organik_vendas/l10n/app_localizations.dart';
 import 'package:organik_vendas/src/features/customers/controller/customers_controller.dart';
 
 class CustomerListWidget extends ConsumerWidget {
@@ -9,12 +10,13 @@ class CustomerListWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final customers = ref.watch(filteredCustomersProvider);
+    final localization = AppLocalizations.of(context)!;
 
     return Column(
       children: [
         TextField(
           decoration: InputDecoration(
-            hintText: 'Pesquisar',
+            hintText: localization.search,
             prefixIcon: const Icon(Icons.search, color: Colors.grey),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
             filled: true,
@@ -28,9 +30,9 @@ class CustomerListWidget extends ConsumerWidget {
         const SizedBox(height: 10),
         Expanded(
           child: customers.isEmpty
-              ? const Center(
+              ? Center(
                   child: Text(
-                    'Nenhum cliente encontrado com esse filtro',
+                    localization.noCustomersFoundWithThisFilter,
                     style: TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                 )
@@ -56,19 +58,17 @@ class CustomerListWidget extends ConsumerWidget {
                           return await showDialog<bool>(
                             context: context,
                             builder: (context) => AlertDialog(
-                              title: const Text('Confirmar exclusão'),
-                              content: const Text(
-                                'Deseja realmente excluir este cliente? Todos os dados relacionados a ele serão perdidos.',
-                              ),
+                              title: Text(localization.deleteConfirmTitle),
+                              content: Text(localization.areYouSureYouWantToDeleteThisClient),
                               actions: [
                                 TextButton(
                                   onPressed: () => Navigator.of(context).pop(false),
-                                  child: const Text('Cancelar'),
+                                  child: Text(localization.cancel),
                                 ),
                                 TextButton(
                                   onPressed: () => Navigator.of(context).pop(true),
                                   style: TextButton.styleFrom(foregroundColor: Colors.red),
-                                  child: const Text('Excluir'),
+                                  child: Text(localization.delete),
                                 ),
                               ],
                             ),

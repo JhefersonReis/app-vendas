@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:organik_vendas/l10n/app_localizations.dart';
 import 'package:organik_vendas/src/features/reports/controller/reports_controller.dart';
 
 class ReportsPage extends ConsumerStatefulWidget {
@@ -52,11 +53,12 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
   Widget build(BuildContext context) {
     final reportsState = ref.watch(reportsControllerProvider);
     final size = MediaQuery.of(context).size;
+    final localization = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Relatórios',
+        title: Text(
+          localization.reportsTitle,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -77,7 +79,7 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Período', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    Text(localization.period, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -85,7 +87,7 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('Data Inícial', style: TextStyle(fontSize: 16)),
+                            Text(localization.startDate, style: TextStyle(fontSize: 16)),
                             Container(
                               decoration: BoxDecoration(
                                 border: Border.all(color: Colors.grey),
@@ -108,7 +110,7 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('Data Final', style: TextStyle(fontSize: 16)),
+                            Text(localization.endDate, style: TextStyle(fontSize: 16)),
                             Container(
                               decoration: BoxDecoration(
                                 border: Border.all(color: Colors.grey),
@@ -141,7 +143,7 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
                 child: reportsState.when(
                   data: (data) {
                     if (data == null) {
-                      return const Center(child: Text('Selecione um período para gerar o relatório.'));
+                      return Center(child: Text(localization.selectAPeriodToGenerateTheReport));
                     }
                     return ListView(
                       children: [
@@ -159,7 +161,7 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
                                       NumberFormat.simpleCurrency(locale: 'pt_BR').format(data.totalRevenue),
                                       style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                     ),
-                                    const Text('Receita Total', style: TextStyle(fontSize: 16)),
+                                    Text(localization.totalRevenue, style: TextStyle(fontSize: 16)),
                                   ],
                                 ),
                               ),
@@ -175,7 +177,7 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
                                       data.totalSales.toString(),
                                       style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                     ),
-                                    const Text('Total de Vendas', style: TextStyle(fontSize: 16)),
+                                    Text(localization.salesQuantity, style: TextStyle(fontSize: 16)),
                                   ],
                                 ),
                               ),
@@ -189,8 +191,8 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Status dos Pagamentos',
+                                Text(
+                                  localization.paymentStatus,
                                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                 ),
                                 const SizedBox(height: 10),
@@ -202,7 +204,7 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
                                       decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.green),
                                       margin: const EdgeInsets.only(right: 8),
                                     ),
-                                    const Text('Vendas Pagas', style: TextStyle(fontSize: 16)),
+                                    Text(localization.paidSales, style: TextStyle(fontSize: 16)),
                                     const Spacer(),
                                     Text(data.paidSales.toString(), style: const TextStyle(fontSize: 16)),
                                   ],
@@ -216,7 +218,7 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
                                       decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.orange),
                                       margin: const EdgeInsets.only(right: 8),
                                     ),
-                                    const Text('Vendas Pendentes', style: TextStyle(fontSize: 16)),
+                                    Text(localization.pendingSales, style: TextStyle(fontSize: 16)),
                                     const Spacer(),
                                     Text(data.pendingSales.toString(), style: const TextStyle(fontSize: 16)),
                                   ],
@@ -224,7 +226,7 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
                                 const Divider(),
                                 Row(
                                   children: [
-                                    const Text('Ticket Médio', style: TextStyle(fontSize: 16)),
+                                    Text(localization.averageTicket, style: TextStyle(fontSize: 16)),
                                     const Spacer(),
                                     Text(
                                       NumberFormat.simpleCurrency(locale: 'pt_BR').format(data.averageTicket),
@@ -237,38 +239,38 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        const Text(
-                          'Produtos Mais Vendidos',
+                        Text(
+                          localization.bestSellingProducts,
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         if (data.topProducts.isEmpty)
-                          const Padding(
+                          Padding(
                             padding: EdgeInsets.all(8.0),
-                            child: Text('Nenhum produto vendido neste período.', style: TextStyle(fontSize: 16)),
+                            child: Text(localization.noProductsSoldInThisPeriod, style: TextStyle(fontSize: 16)),
                           ),
                         ...data.topProducts.map(
                           (p) => Card(
                             child: ListTile(
                               title: Text(p.product.name),
                               subtitle: Text(
-                                'Vendido: ${p.quantitySold}x - Receita: ${NumberFormat.simpleCurrency(locale: 'pt_BR').format(p.totalRevenue)}',
+                                '${localization.sold}: ${p.quantitySold}x - ${localization.revenue}: ${NumberFormat.simpleCurrency(locale: 'pt_BR').format(p.totalRevenue)}',
                               ),
                             ),
                           ),
                         ),
                         const SizedBox(height: 20),
-                        const Text('Melhores Clientes', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        Text(localization.bestCustomers, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                         if (data.topCustomers.isEmpty)
-                          const Padding(
+                          Padding(
                             padding: EdgeInsets.all(8.0),
-                            child: Text('Nenhum cliente encontrado neste período.', style: TextStyle(fontSize: 16)),
+                            child: Text(localization.noCustomersFoundInThisPeriod, style: TextStyle(fontSize: 16)),
                           ),
                         ...data.topCustomers.map(
                           (c) => Card(
                             child: ListTile(
                               title: Text(c.customer.name),
                               subtitle: Text(
-                                'Compras: ${c.totalPurchases} - Total Gasto: ${NumberFormat.simpleCurrency(locale: 'pt_BR').format(c.totalSpent)}',
+                                '${localization.purchases}: ${c.totalPurchases} - ${localization.totalSpend}: ${NumberFormat.simpleCurrency(locale: 'pt_BR').format(c.totalSpent)}',
                               ),
                             ),
                           ),

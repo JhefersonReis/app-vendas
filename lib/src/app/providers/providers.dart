@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:organik_vendas/src/app/database/database.dart';
+import 'package:organik_vendas/src/app/locale/locale_controller.dart';
 import 'package:organik_vendas/src/features/customers/data/customers_repository.dart';
 import 'package:organik_vendas/src/features/customers/data/customers_repository_impl.dart';
 import 'package:organik_vendas/src/features/customers/domain/customers_service.dart';
@@ -66,3 +68,6 @@ final reportsRepositoryProvider = Provider<ReportsRepository>(
 final reportsServiceProvider = Provider<ReportsService>(
   (ref) => ReportsServiceImpl(ref.read(reportsRepositoryProvider)),
 );
+
+// Locale
+final localeProvider = StateNotifierProvider<LocaleController, Locale>((ref) => LocaleController());
