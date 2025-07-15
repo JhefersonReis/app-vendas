@@ -718,6 +718,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Total Spend'**
   String get totalSpend;
+
+  /// No description provided for @selectOneClient.
+  ///
+  /// In en, this message translates to:
+  /// **'Select one client'**
+  String get selectOneClient;
+
+  /// No description provided for @addAtLeastOneProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Add at least one product'**
+  String get addAtLeastOneProduct;
+
+  /// No description provided for @productNameIsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Product name is required'**
+  String get productNameIsRequired;
+
+  /// No description provided for @productPriceIsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Product price is required'**
+  String get productPriceIsRequired;
+
+  /// No description provided for @productWeightIsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Product weight is required'**
+  String get productWeightIsRequired;
+
+  /// No description provided for @customerNameIsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer name is required'**
+  String get customerNameIsRequired;
+
+  /// No description provided for @empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Empty'**
+  String get empty;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

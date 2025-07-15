@@ -17,7 +17,6 @@ class MyApp extends ConsumerWidget {
 
     return MaterialApp.router(
       locale: locale,
-      debugShowCheckedModeBanner: false,
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF248f3d)), useMaterial3: true),

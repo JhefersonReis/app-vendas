@@ -104,5 +104,12 @@
   "revenue": "Revenue",
   "bestCustomers": "Best Customers",
   "purchases": "Purchases",
-  "totalSpend": "Total Spend"
+  "totalSpend": "Total Spend",
+  "selectOneClient": "Select one client",
+  "addAtLeastOneProduct": "Add at least one product",
+  "productNameIsRequired": "Product name is required",
+  "productPriceIsRequired": "Product price is required",
+  "productWeightIsRequired": "Product weight is required",
+  "customerNameIsRequired": "Customer name is required",
+  "empty": "Empty"
 }

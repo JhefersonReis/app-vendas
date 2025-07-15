@@ -319,4 +319,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get totalSpend => 'Total Spend';
+
+  @override
+  String get selectOneClient => 'Select one client';
+
+  @override
+  String get addAtLeastOneProduct => 'Add at least one product';
+
+  @override
+  String get productNameIsRequired => 'Product name is required';
+
+  @override
+  String get productPriceIsRequired => 'Product price is required';
+
+  @override
+  String get productWeightIsRequired => 'Product weight is required';
+
+  @override
+  String get customerNameIsRequired => 'Customer name is required';
+
+  @override
+  String get empty => 'Empty';
 }

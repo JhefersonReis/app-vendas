@@ -15,8 +15,8 @@ class CustomersRepositoryImpl implements CustomersRepository {
         .insert(
           CustomersCompanion.insert(
             name: customer.name,
-            address: customer.address,
-            phone: customer.phone,
+            address: Value(customer.address),
+            phone: Value(customer.phone),
             countryISOCode: customer.countryISOCode,
             observation: Value(customer.observation),
             createdAt: customer.createdAt,

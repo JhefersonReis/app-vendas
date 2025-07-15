@@ -1,8 +1,8 @@
 class CustomerModel {
   final int id;
   final String name;
-  final String address;
-  final String phone;
+  final String? address;
+  final String? phone;
   final String countryISOCode;
   final String? observation;
   final DateTime createdAt;

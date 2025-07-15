@@ -3,6 +3,7 @@ import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:organik_vendas/l10n/app_localizations.dart';
+import 'package:organik_vendas/src/app/helpers/toast_helper.dart';
 import 'package:organik_vendas/src/features/products/controller/product_controller.dart';
 
 class ProductFormPage extends ConsumerStatefulWidget {
@@ -60,6 +61,23 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
   }
 
   Future<void> _saveProduct() async {
+    final localization = AppLocalizations.of(context)!;
+
+    if (productName.text.isEmpty) {
+      ToastHelper.showError(context, localization.productNameIsRequired);
+      return;
+    }
+
+    if (productPrice.text.isEmpty) {
+      ToastHelper.showError(context, localization.productPriceIsRequired);
+      return;
+    }
+
+    if (productWeight.text.isEmpty) {
+      ToastHelper.showError(context, localization.productWeightIsRequired);
+      return;
+    }
+
     final price = _parseCurrencyToDouble(productPrice.text);
 
     if (widget.id != null) {

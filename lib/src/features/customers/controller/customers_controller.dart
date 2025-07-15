@@ -26,8 +26,8 @@ final filteredCustomersProvider = Provider.autoDispose<List<CustomerModel>>((ref
       return customers.where((customer) {
         final searchTerm = filter.toLowerCase();
         final customerName = customer.name.toLowerCase();
-        final customerAddress = customer.address.toLowerCase();
-        final customerPhone = customer.phone.toLowerCase();
+        final customerAddress = customer.address?.toLowerCase() ?? '';
+        final customerPhone = customer.phone?.toLowerCase() ?? '';
 
         return customerName.contains(searchTerm) ||
             customerAddress.contains(searchTerm) ||

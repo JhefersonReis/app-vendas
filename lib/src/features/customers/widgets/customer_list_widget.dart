@@ -106,7 +106,11 @@ class CustomerListWidget extends ConsumerWidget {
                                   children: [
                                     const Icon(Icons.phone, size: 18, color: Colors.grey),
                                     const SizedBox(width: 5),
-                                    Text(customer.phone),
+                                    Text(
+                                      customer.phone?.isEmpty ?? true
+                                          ? localization.empty
+                                          : customer.phone ?? localization.empty,
+                                    ),
                                   ],
                                 ),
                                 const SizedBox(height: 5),
@@ -115,7 +119,13 @@ class CustomerListWidget extends ConsumerWidget {
                                     const Icon(Icons.location_on, size: 18, color: Colors.grey),
                                     const SizedBox(width: 5),
                                     Expanded(
-                                      child: Text(customer.address, maxLines: 1, overflow: TextOverflow.ellipsis),
+                                      child: Text(
+                                        customer.address?.isEmpty ?? true
+                                            ? localization.empty
+                                            : customer.address ?? localization.empty,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
                                   ],
                                 ),

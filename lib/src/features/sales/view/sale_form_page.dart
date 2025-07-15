@@ -116,13 +116,15 @@ class _SaleFormState extends ConsumerState<_SaleForm> {
   }
 
   void _saveSale() {
+    final localization = AppLocalizations.of(context)!;
+
     if (_selectedCustomerId == null) {
-      ToastHelper.showError(context, 'Selecione um cliente');
+      ToastHelper.showError(context, localization.selectOneClient);
       return;
     }
 
     if (_items.isEmpty) {
-      ToastHelper.showError(context, 'Adicione pelo menos um produto');
+      ToastHelper.showError(context, localization.addAtLeastOneProduct);
       return;
     }
 

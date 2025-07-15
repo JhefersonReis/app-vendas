@@ -104,5 +104,12 @@
   "revenue": "Receita",
   "bestCustomers": "Melhores Clientes",
   "purchases": "Compras",
-  "totalSpend": "Total Gasto"
+  "totalSpend": "Total Gasto",
+  "selectOneClient": "Selecione um cliente",
+  "addAtLeastOneProduct": "Adicione pelo menos um produto",
+  "productNameIsRequired": "Nome do produto é obrigatório",
+  "productPriceIsRequired": "Preço do produto é obrigatório",
+  "productWeightIsRequired": "Peso do produto é obrigatório",
+  "customerNameIsRequired": "Nome do cliente é obrigatório",
+  "empty": "Vazio"
 }

@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:organik_vendas/l10n/app_localizations.dart';
+import 'package:organik_vendas/src/app/helpers/toast_helper.dart';
 import 'package:organik_vendas/src/features/customers/controller/customers_controller.dart';
 
 class CustomersFormPage extends ConsumerStatefulWidget {
@@ -51,9 +52,9 @@ class _CustomersFormPageState extends ConsumerState<CustomersFormPage> {
   Future<void> _loadCustomer(int id) async {
     final customer = await ref.read(customerByIdProvider(id).future);
     _nameController.text = customer.name;
-    _phoneController.text = customer.phone;
+    _phoneController.text = customer.phone ?? '';
     countryISOCode = customer.countryISOCode;
-    _addressController.text = customer.address;
+    _addressController.text = customer.address ?? '';
     _observationController.text = customer.observation ?? '';
     setState(() {
       _isLoading = false;
@@ -61,6 +62,13 @@ class _CustomersFormPageState extends ConsumerState<CustomersFormPage> {
   }
 
   Future<void> _saveCustomer() async {
+    final localization = AppLocalizations.of(context)!;
+
+    if (_nameController.text.isEmpty) {
+      ToastHelper.showError(context, localization.customerNameIsRequired);
+      return;
+    }
+
     if (widget.id != null) {
       final customer = await ref.read(customerByIdProvider(int.parse(widget.id!)).future);
 

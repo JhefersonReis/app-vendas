@@ -38,18 +38,18 @@ class $CustomersTable extends Customers
   late final GeneratedColumn<String> address = GeneratedColumn<String>(
     'address',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _phoneMeta = const VerificationMeta('phone');
   @override
   late final GeneratedColumn<String> phone = GeneratedColumn<String>(
     'phone',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _countryISOCodeMeta = const VerificationMeta(
     'countryISOCode',
@@ -122,16 +122,12 @@ class $CustomersTable extends Customers
         _addressMeta,
         address.isAcceptableOrUnknown(data['address']!, _addressMeta),
       );
-    } else if (isInserting) {
-      context.missing(_addressMeta);
     }
     if (data.containsKey('phone')) {
       context.handle(
         _phoneMeta,
         phone.isAcceptableOrUnknown(data['phone']!, _phoneMeta),
       );
-    } else if (isInserting) {
-      context.missing(_phoneMeta);
     }
     if (data.containsKey('country_i_s_o_code')) {
       context.handle(
@@ -181,11 +177,11 @@ class $CustomersTable extends Customers
       address: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}address'],
-      )!,
+      ),
       phone: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}phone'],
-      )!,
+      ),
       countryISOCode: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}country_i_s_o_code'],
@@ -210,16 +206,16 @@ class $CustomersTable extends Customers
 class Customer extends DataClass implements Insertable<Customer> {
   final int id;
   final String name;
-  final String address;
-  final String phone;
+  final String? address;
+  final String? phone;
   final String countryISOCode;
   final String? observation;
   final DateTime createdAt;
   const Customer({
     required this.id,
     required this.name,
-    required this.address,
-    required this.phone,
+    this.address,
+    this.phone,
     required this.countryISOCode,
     this.observation,
     required this.createdAt,
@@ -229,8 +225,12 @@ class Customer extends DataClass implements Insertable<Customer> {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['name'] = Variable<String>(name);
-    map['address'] = Variable<String>(address);
-    map['phone'] = Variable<String>(phone);
+    if (!nullToAbsent || address != null) {
+      map['address'] = Variable<String>(address);
+    }
+    if (!nullToAbsent || phone != null) {
+      map['phone'] = Variable<String>(phone);
+    }
     map['country_i_s_o_code'] = Variable<String>(countryISOCode);
     if (!nullToAbsent || observation != null) {
       map['observation'] = Variable<String>(observation);
@@ -243,8 +243,12 @@ class Customer extends DataClass implements Insertable<Customer> {
     return CustomersCompanion(
       id: Value(id),
       name: Value(name),
-      address: Value(address),
-      phone: Value(phone),
+      address: address == null && nullToAbsent
+          ? const Value.absent()
+          : Value(address),
+      phone: phone == null && nullToAbsent
+          ? const Value.absent()
+          : Value(phone),
       countryISOCode: Value(countryISOCode),
       observation: observation == null && nullToAbsent
           ? const Value.absent()
@@ -261,8 +265,8 @@ class Customer extends DataClass implements Insertable<Customer> {
     return Customer(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
-      address: serializer.fromJson<String>(json['address']),
-      phone: serializer.fromJson<String>(json['phone']),
+      address: serializer.fromJson<String?>(json['address']),
+      phone: serializer.fromJson<String?>(json['phone']),
       countryISOCode: serializer.fromJson<String>(json['countryISOCode']),
       observation: serializer.fromJson<String?>(json['observation']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
@@ -274,8 +278,8 @@ class Customer extends DataClass implements Insertable<Customer> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
-      'address': serializer.toJson<String>(address),
-      'phone': serializer.toJson<String>(phone),
+      'address': serializer.toJson<String?>(address),
+      'phone': serializer.toJson<String?>(phone),
       'countryISOCode': serializer.toJson<String>(countryISOCode),
       'observation': serializer.toJson<String?>(observation),
       'createdAt': serializer.toJson<DateTime>(createdAt),
@@ -285,16 +289,16 @@ class Customer extends DataClass implements Insertable<Customer> {
   Customer copyWith({
     int? id,
     String? name,
-    String? address,
-    String? phone,
+    Value<String?> address = const Value.absent(),
+    Value<String?> phone = const Value.absent(),
     String? countryISOCode,
     Value<String?> observation = const Value.absent(),
     DateTime? createdAt,
   }) => Customer(
     id: id ?? this.id,
     name: name ?? this.name,
-    address: address ?? this.address,
-    phone: phone ?? this.phone,
+    address: address.present ? address.value : this.address,
+    phone: phone.present ? phone.value : this.phone,
     countryISOCode: countryISOCode ?? this.countryISOCode,
     observation: observation.present ? observation.value : this.observation,
     createdAt: createdAt ?? this.createdAt,
@@ -355,8 +359,8 @@ class Customer extends DataClass implements Insertable<Customer> {
 class CustomersCompanion extends UpdateCompanion<Customer> {
   final Value<int> id;
   final Value<String> name;
-  final Value<String> address;
-  final Value<String> phone;
+  final Value<String?> address;
+  final Value<String?> phone;
   final Value<String> countryISOCode;
   final Value<String?> observation;
   final Value<DateTime> createdAt;
@@ -372,14 +376,12 @@ class CustomersCompanion extends UpdateCompanion<Customer> {
   CustomersCompanion.insert({
     this.id = const Value.absent(),
     required String name,
-    required String address,
-    required String phone,
+    this.address = const Value.absent(),
+    this.phone = const Value.absent(),
     required String countryISOCode,
     this.observation = const Value.absent(),
     required DateTime createdAt,
   }) : name = Value(name),
-       address = Value(address),
-       phone = Value(phone),
        countryISOCode = Value(countryISOCode),
        createdAt = Value(createdAt);
   static Insertable<Customer> custom({
@@ -405,8 +407,8 @@ class CustomersCompanion extends UpdateCompanion<Customer> {
   CustomersCompanion copyWith({
     Value<int>? id,
     Value<String>? name,
-    Value<String>? address,
-    Value<String>? phone,
+    Value<String?>? address,
+    Value<String?>? phone,
     Value<String>? countryISOCode,
     Value<String?>? observation,
     Value<DateTime>? createdAt,
@@ -1505,8 +1507,8 @@ typedef $$CustomersTableCreateCompanionBuilder =
     CustomersCompanion Function({
       Value<int> id,
       required String name,
-      required String address,
-      required String phone,
+      Value<String?> address,
+      Value<String?> phone,
       required String countryISOCode,
       Value<String?> observation,
       required DateTime createdAt,
@@ -1515,8 +1517,8 @@ typedef $$CustomersTableUpdateCompanionBuilder =
     CustomersCompanion Function({
       Value<int> id,
       Value<String> name,
-      Value<String> address,
-      Value<String> phone,
+      Value<String?> address,
+      Value<String?> phone,
       Value<String> countryISOCode,
       Value<String?> observation,
       Value<DateTime> createdAt,
@@ -1751,8 +1753,8 @@ class $$CustomersTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
-                Value<String> address = const Value.absent(),
-                Value<String> phone = const Value.absent(),
+                Value<String?> address = const Value.absent(),
+                Value<String?> phone = const Value.absent(),
                 Value<String> countryISOCode = const Value.absent(),
                 Value<String?> observation = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
@@ -1769,8 +1771,8 @@ class $$CustomersTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 required String name,
-                required String address,
-                required String phone,
+                Value<String?> address = const Value.absent(),
+                Value<String?> phone = const Value.absent(),
                 required String countryISOCode,
                 Value<String?> observation = const Value.absent(),
                 required DateTime createdAt,

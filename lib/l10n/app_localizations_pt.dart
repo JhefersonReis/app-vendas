@@ -319,4 +319,25 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get totalSpend => 'Total Gasto';
+
+  @override
+  String get selectOneClient => 'Selecione um cliente';
+
+  @override
+  String get addAtLeastOneProduct => 'Adicione pelo menos um produto';
+
+  @override
+  String get productNameIsRequired => 'Nome do produto é obrigatório';
+
+  @override
+  String get productPriceIsRequired => 'Preço do produto é obrigatório';
+
+  @override
+  String get productWeightIsRequired => 'Peso do produto é obrigatório';
+
+  @override
+  String get customerNameIsRequired => 'Nome do cliente é obrigatório';
+
+  @override
+  String get empty => 'Vazio';
 }
