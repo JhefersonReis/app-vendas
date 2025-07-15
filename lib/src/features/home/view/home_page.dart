@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:organik_vendas/l10n/app_localizations.dart';
+import 'package:organik_vendas/src/app/helpers/currency_helper.dart';
 import 'package:organik_vendas/src/features/home/controller/home_controller.dart';
 import 'package:organik_vendas/src/features/home/widgets/language_selector_widget.dart';
 
@@ -65,7 +65,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                           Column(
                             children: [
                               Text(
-                                NumberFormat.simpleCurrency(locale: 'pt_BR').format(state.totalSoldToday),
+                                CurrencyHelper.formatCurrency(context, state.totalSoldToday),
                                 style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                               ),
                               Text(localization.totalSold),

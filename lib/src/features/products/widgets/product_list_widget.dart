@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:organik_vendas/l10n/app_localizations.dart';
+import 'package:organik_vendas/src/app/helpers/currency_helper.dart';
 import 'package:organik_vendas/src/features/products/controller/product_controller.dart';
 
 class ProductListWidget extends ConsumerWidget {
@@ -103,7 +103,7 @@ class ProductListWidget extends ConsumerWidget {
                                   ],
                                 ),
                                 Text(
-                                  NumberFormat.simpleCurrency(locale: 'pt_BR').format(product.price),
+                                  CurrencyHelper.formatCurrency(context, product.price),
                                   style: const TextStyle(
                                     color: Colors.green,
                                     fontSize: 16,

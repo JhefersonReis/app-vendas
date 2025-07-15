@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:organik_vendas/src/app/helpers/currency_helper.dart';
 import 'package:organik_vendas/src/features/sales/domain/item_model.dart';
 
 class SaleItemWidget extends StatelessWidget {
@@ -37,10 +37,10 @@ class SaleItemWidget extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            Text(NumberFormat.simpleCurrency(locale: 'pt_BR').format(item.unitPrice)),
+            Text(CurrencyHelper.formatCurrency(context, item.unitPrice)),
             const SizedBox(width: 8),
             Text(
-              NumberFormat.simpleCurrency(locale: 'pt_BR').format(item.totalPrice),
+              CurrencyHelper.formatCurrency(context, item.totalPrice),
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             IconButton(

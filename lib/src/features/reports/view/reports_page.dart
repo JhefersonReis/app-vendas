@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:organik_vendas/l10n/app_localizations.dart';
+import 'package:organik_vendas/src/app/helpers/currency_helper.dart';
 import 'package:organik_vendas/src/features/reports/controller/reports_controller.dart';
 
 class ReportsPage extends ConsumerStatefulWidget {
@@ -158,7 +159,7 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
                                   children: [
                                     const Icon(Icons.attach_money, size: 32, color: Colors.green),
                                     Text(
-                                      NumberFormat.simpleCurrency(locale: 'pt_BR').format(data.totalRevenue),
+                                      CurrencyHelper.formatCurrency(context, data.totalRevenue),
                                       style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                     ),
                                     Text(localization.totalRevenue, style: TextStyle(fontSize: 16)),
@@ -229,7 +230,7 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
                                     Text(localization.averageTicket, style: TextStyle(fontSize: 16)),
                                     const Spacer(),
                                     Text(
-                                      NumberFormat.simpleCurrency(locale: 'pt_BR').format(data.averageTicket),
+                                      CurrencyHelper.formatCurrency(context, data.averageTicket),
                                       style: const TextStyle(fontSize: 16),
                                     ),
                                   ],
@@ -253,7 +254,7 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
                             child: ListTile(
                               title: Text(p.product.name),
                               subtitle: Text(
-                                '${localization.sold}: ${p.quantitySold}x - ${localization.revenue}: ${NumberFormat.simpleCurrency(locale: 'pt_BR').format(p.totalRevenue)}',
+                                '${localization.sold}: ${p.quantitySold}x - ${localization.revenue}: ${CurrencyHelper.formatCurrency(context, p.totalRevenue)}',
                               ),
                             ),
                           ),
@@ -270,7 +271,7 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
                             child: ListTile(
                               title: Text(c.customer.name),
                               subtitle: Text(
-                                '${localization.purchases}: ${c.totalPurchases} - ${localization.totalSpend}: ${NumberFormat.simpleCurrency(locale: 'pt_BR').format(c.totalSpent)}',
+                                '${localization.purchases}: ${c.totalPurchases} - ${localization.totalSpend}: ${CurrencyHelper.formatCurrency(context, c.totalSpent)}',
                               ),
                             ),
                           ),
