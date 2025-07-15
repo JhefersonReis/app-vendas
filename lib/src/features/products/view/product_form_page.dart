@@ -3,6 +3,7 @@ import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:organik_vendas/l10n/app_localizations.dart';
+import 'package:organik_vendas/src/app/helpers/currency_helper.dart';
 import 'package:organik_vendas/src/app/helpers/toast_helper.dart';
 import 'package:organik_vendas/src/features/products/controller/product_controller.dart';
 
@@ -158,7 +159,7 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                     children: [
                       Text.rich(
                         TextSpan(
-                          text: "${localization.price} (R\$) ",
+                          text: "${localization.price} (${CurrencyHelper.getCurrencySymbol(context)}) ",
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                           children: [
                             TextSpan(
@@ -173,13 +174,16 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                         keyboardType: TextInputType.number,
                         inputFormatters: [
                           CurrencyInputFormatter(
-                            leadingSymbol: 'R\$',
+                            leadingSymbol: CurrencyHelper.getCurrencySymbol(context),
                             useSymbolPadding: true,
                             thousandSeparator: ThousandSeparator.Period,
                             mantissaLength: 2,
                           ),
                         ],
-                        decoration: const InputDecoration(hintText: 'R\$ 0,00', border: OutlineInputBorder()),
+                        decoration: InputDecoration(
+                          hintText: '${CurrencyHelper.getCurrencySymbol(context)} 0,00',
+                          border: OutlineInputBorder(),
+                        ),
                         onTapOutside: (_) => FocusScope.of(context).unfocus(),
                       ),
                     ],
@@ -279,6 +283,6 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
   }
 
   double _parseCurrencyToDouble(String currency) {
-    return double.parse(currency.replaceAll('R\$', '').replaceAll('.', '').replaceAll(',', '.'));
+    return double.parse(currency.replaceAll('R\$', '').replaceAll('\$', '').replaceAll('.', '').replaceAll(',', '.'));
   }
 }
