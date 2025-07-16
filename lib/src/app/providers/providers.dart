@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:organik_vendas/src/app/database/database.dart';
-import 'package:organik_vendas/src/app/locale/locale_controller.dart';
-import 'package:organik_vendas/src/features/customers/data/customers_repository.dart';
-import 'package:organik_vendas/src/features/customers/data/customers_repository_impl.dart';
-import 'package:organik_vendas/src/features/customers/domain/customers_service.dart';
-import 'package:organik_vendas/src/features/customers/domain/customers_service_impl.dart';
-import 'package:organik_vendas/src/features/home/controller/home_state.dart';
-import 'package:organik_vendas/src/features/products/data/product_repository.dart';
-import 'package:organik_vendas/src/features/products/data/product_repository_impl.dart';
-import 'package:organik_vendas/src/features/products/domain/product_service.dart';
-import 'package:organik_vendas/src/features/products/domain/product_service_impl.dart';
-import 'package:organik_vendas/src/features/reports/data/reports_repository.dart';
-import 'package:organik_vendas/src/features/reports/data/reports_repository_impl.dart';
-import 'package:organik_vendas/src/features/reports/domain/reports_service.dart';
-import 'package:organik_vendas/src/features/reports/domain/reports_service_impl.dart';
+import 'package:zello/src/app/database/database.dart';
+import 'package:zello/src/app/locale/locale_controller.dart';
+import 'package:zello/src/features/customers/data/customers_repository.dart';
+import 'package:zello/src/features/customers/data/customers_repository_impl.dart';
+import 'package:zello/src/features/customers/domain/customers_service.dart';
+import 'package:zello/src/features/customers/domain/customers_service_impl.dart';
+import 'package:zello/src/features/home/controller/home_state.dart';
+import 'package:zello/src/features/products/data/product_repository.dart';
+import 'package:zello/src/features/products/data/product_repository_impl.dart';
+import 'package:zello/src/features/products/domain/product_service.dart';
+import 'package:zello/src/features/products/domain/product_service_impl.dart';
+import 'package:zello/src/features/reports/data/reports_repository.dart';
+import 'package:zello/src/features/reports/data/reports_repository_impl.dart';
+import 'package:zello/src/features/reports/domain/reports_service.dart';
+import 'package:zello/src/features/reports/domain/reports_service_impl.dart';
 
-import 'package:organik_vendas/src/features/sales/controller/sales_controller.dart';
-import 'package:organik_vendas/src/features/sales/data/sales_repository.dart';
-import 'package:organik_vendas/src/features/sales/data/sales_repository_impl.dart';
-import 'package:organik_vendas/src/features/sales/domain/sale_model.dart';
-import 'package:organik_vendas/src/features/sales/domain/sales_service.dart';
-import 'package:organik_vendas/src/features/sales/domain/sales_service_impl.dart';
+import 'package:zello/src/features/sales/controller/sales_controller.dart';
+import 'package:zello/src/features/sales/data/sales_repository.dart';
+import 'package:zello/src/features/sales/data/sales_repository_impl.dart';
+import 'package:zello/src/features/sales/domain/sale_model.dart';
+import 'package:zello/src/features/sales/domain/sales_service.dart';
+import 'package:zello/src/features/sales/domain/sales_service_impl.dart';
 
-import 'package:organik_vendas/src/features/home/controller/home_controller.dart';
+import 'package:zello/src/features/home/controller/home_controller.dart';
 
 // Home provider
 final homeControllerProvider = StateNotifierProvider<HomeController, HomeState>((ref) {

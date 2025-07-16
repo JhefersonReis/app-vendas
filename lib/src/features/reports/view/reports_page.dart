@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:organik_vendas/l10n/app_localizations.dart';
-import 'package:organik_vendas/src/app/helpers/currency_helper.dart';
-import 'package:organik_vendas/src/features/reports/controller/reports_controller.dart';
+import 'package:zello/l10n/app_localizations.dart';
+import 'package:zello/src/app/helpers/currency_helper.dart';
+import 'package:zello/src/features/reports/controller/reports_controller.dart';
 
 class ReportsPage extends ConsumerStatefulWidget {
   const ReportsPage({super.key});

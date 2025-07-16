@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
-import 'package:organik_vendas/src/app/database/converters/item_converter.dart';
-import 'package:organik_vendas/src/features/sales/domain/item_model.dart';
+import 'package:zello/src/app/database/converters/item_converter.dart';
+import 'package:zello/src/features/sales/domain/item_model.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'tables/customers_table.dart';

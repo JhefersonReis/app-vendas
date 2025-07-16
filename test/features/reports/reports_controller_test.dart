@@ -1,13 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:organik_vendas/src/features/reports/controller/reports_controller.dart';
-import 'package:organik_vendas/src/features/reports/domain/report_model.dart';
-import 'package:organik_vendas/src/features/reports/domain/reports_service.dart';
-import 'package:organik_vendas/src/features/reports/domain/top_customer_model.dart';
-import 'package:organik_vendas/src/features/reports/domain/top_product_model.dart';
-import 'package:organik_vendas/src/features/products/domain/product_model.dart';
-import 'package:organik_vendas/src/features/customers/domain/customer_model.dart';
+import 'package:zello/src/features/reports/controller/reports_controller.dart';
+import 'package:zello/src/features/reports/domain/report_model.dart';
+import 'package:zello/src/features/reports/domain/reports_service.dart';
+import 'package:zello/src/features/reports/domain/top_customer_model.dart';
+import 'package:zello/src/features/reports/domain/top_product_model.dart';
+import 'package:zello/src/features/products/domain/product_model.dart';
+import 'package:zello/src/features/customers/domain/customer_model.dart';
 
 import 'reports_controller_test.mocks.dart';
 

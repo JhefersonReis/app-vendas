@@ -1,6 +1,6 @@
-import 'package:organik_vendas/src/features/sales/data/sales_repository.dart';
-import 'package:organik_vendas/src/features/sales/domain/sale_model.dart';
-import 'package:organik_vendas/src/features/sales/domain/sales_service.dart';
+import 'package:zello/src/features/sales/data/sales_repository.dart';
+import 'package:zello/src/features/sales/domain/sale_model.dart';
+import 'package:zello/src/features/sales/domain/sales_service.dart';
 
 class SalesServiceImpl implements SalesService {
   final SalesRepository _repository;

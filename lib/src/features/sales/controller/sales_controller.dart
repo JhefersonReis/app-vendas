@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:organik_vendas/src/app/providers/providers.dart';
-import 'package:organik_vendas/src/features/customers/controller/customers_controller.dart';
-import 'package:organik_vendas/src/features/sales/data/sales_repository.dart';
-import 'package:organik_vendas/src/features/sales/data/sales_repository_impl.dart';
-import 'package:organik_vendas/src/features/sales/domain/sale_model.dart';
-import 'package:organik_vendas/src/features/sales/domain/sales_service.dart';
-import 'package:organik_vendas/src/features/sales/domain/sales_service_impl.dart';
+import 'package:zello/src/app/providers/providers.dart';
+import 'package:zello/src/features/customers/controller/customers_controller.dart';
+import 'package:zello/src/features/sales/data/sales_repository.dart';
+import 'package:zello/src/features/sales/data/sales_repository_impl.dart';
+import 'package:zello/src/features/sales/domain/sale_model.dart';
+import 'package:zello/src/features/sales/domain/sales_service.dart';
+import 'package:zello/src/features/sales/domain/sales_service_impl.dart';
 
 final salesRepositoryProvider = Provider<SalesRepository>(
   (ref) => SalesRepositoryImpl(database: ref.read(databaseProvider)),
@@ -50,7 +50,9 @@ final filteredSalesProvider = Provider.autoDispose<List<SaleModel>>((ref) {
 
       // Filtro por nome
       if (filter.isNotEmpty) {
-        filteredSales = filteredSales.where((sale) => sale.customerName.toLowerCase().contains(filter.toLowerCase())).toList();
+        filteredSales = filteredSales
+            .where((sale) => sale.customerName.toLowerCase().contains(filter.toLowerCase()))
+            .toList();
       }
 
       return filteredSales;

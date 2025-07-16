@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:organik_vendas/src/app/helpers/currency_helper.dart';
-import 'package:organik_vendas/src/features/sales/domain/item_model.dart';
+import 'package:zello/src/app/helpers/currency_helper.dart';
+import 'package:zello/src/features/sales/domain/item_model.dart';
 
 class SaleItemWidget extends StatelessWidget {
   final ItemModel item;

@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:organik_vendas/src/features/home/controller/home_state.dart';
-import 'package:organik_vendas/src/app/providers/providers.dart';
+import 'package:zello/src/features/home/controller/home_state.dart';
+import 'package:zello/src/app/providers/providers.dart';
 
 final homeControllerProvider = StateNotifierProvider<HomeController, HomeState>((ref) {
   return HomeController(ref);

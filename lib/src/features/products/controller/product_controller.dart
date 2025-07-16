@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:organik_vendas/src/app/providers/providers.dart';
-import 'package:organik_vendas/src/features/products/domain/product_model.dart';
-import 'package:organik_vendas/src/features/products/domain/product_service.dart';
+import 'package:zello/src/app/providers/providers.dart';
+import 'package:zello/src/features/products/domain/product_model.dart';
+import 'package:zello/src/features/products/domain/product_service.dart';
 
 final productsControllerProvider = StateNotifierProvider<ProductController, AsyncValue<List<ProductModel>>>(
   (ref) => ProductController(service: ref.read(productServiceProvider)),

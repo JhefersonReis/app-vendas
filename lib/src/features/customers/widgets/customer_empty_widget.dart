@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:organik_vendas/l10n/app_localizations.dart';
+import 'package:zello/l10n/app_localizations.dart';
 
 class CustomerEmptyWidget extends StatelessWidget {
   const CustomerEmptyWidget({super.key});

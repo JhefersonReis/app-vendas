@@ -1,4 +1,4 @@
-import 'package:organik_vendas/src/features/sales/domain/sale_model.dart';
+import 'package:zello/src/features/sales/domain/sale_model.dart';
 
 abstract interface class SalesRepository {
   Future<List<SaleModel>> findAll({bool? isPaid});

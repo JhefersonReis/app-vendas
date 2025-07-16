@@ -1,6 +1,6 @@
-import 'package:organik_vendas/src/features/customers/domain/customer_model.dart';
-import 'package:organik_vendas/src/features/customers/data/customers_repository.dart';
-import 'package:organik_vendas/src/features/customers/domain/customers_service.dart';
+import 'package:zello/src/features/customers/domain/customer_model.dart';
+import 'package:zello/src/features/customers/data/customers_repository.dart';
+import 'package:zello/src/features/customers/domain/customers_service.dart';
 
 class CustomersServiceImpl implements CustomersService {
   final CustomersRepository _customersRepository;

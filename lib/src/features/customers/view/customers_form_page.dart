@@ -5,9 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:organik_vendas/l10n/app_localizations.dart';
-import 'package:organik_vendas/src/app/helpers/toast_helper.dart';
-import 'package:organik_vendas/src/features/customers/controller/customers_controller.dart';
+import 'package:zello/l10n/app_localizations.dart';
+import 'package:zello/src/app/helpers/toast_helper.dart';
+import 'package:zello/src/features/customers/controller/customers_controller.dart';
 
 class CustomersFormPage extends ConsumerStatefulWidget {
   final String? id;

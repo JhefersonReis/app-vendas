@@ -1,4 +1,4 @@
-package com.organik.app.organik_vendas
+package com.zello.app
 
 import io.flutter.embedding.android.FlutterActivity
 

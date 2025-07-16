@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
-import 'package:organik_vendas/src/app/database/database.dart';
-import 'package:organik_vendas/src/features/sales/data/sales_repository.dart';
-import 'package:organik_vendas/src/features/sales/domain/sale_model.dart';
+import 'package:zello/src/app/database/database.dart';
+import 'package:zello/src/features/sales/data/sales_repository.dart';
+import 'package:zello/src/features/sales/domain/sale_model.dart';
 
 class SalesRepositoryImpl implements SalesRepository {
   final Database _database;

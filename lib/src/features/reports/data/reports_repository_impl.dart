@@ -1,11 +1,11 @@
 import 'package:drift/drift.dart';
-import 'package:organik_vendas/src/app/database/database.dart';
-import 'package:organik_vendas/src/features/customers/domain/customer_model.dart';
-import 'package:organik_vendas/src/features/products/domain/product_model.dart';
-import 'package:organik_vendas/src/features/reports/data/reports_repository.dart';
-import 'package:organik_vendas/src/features/reports/domain/report_model.dart';
-import 'package:organik_vendas/src/features/reports/domain/top_customer_model.dart';
-import 'package:organik_vendas/src/features/reports/domain/top_product_model.dart';
+import 'package:zello/src/app/database/database.dart';
+import 'package:zello/src/features/customers/domain/customer_model.dart';
+import 'package:zello/src/features/products/domain/product_model.dart';
+import 'package:zello/src/features/reports/data/reports_repository.dart';
+import 'package:zello/src/features/reports/domain/report_model.dart';
+import 'package:zello/src/features/reports/domain/top_customer_model.dart';
+import 'package:zello/src/features/reports/domain/top_product_model.dart';
 
 class ReportsRepositoryImpl implements ReportsRepository {
   final Database _database;

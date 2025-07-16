@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
-import 'package:organik_vendas/src/app/database/database.dart';
-import 'package:organik_vendas/src/features/customers/domain/customer_model.dart';
-import 'package:organik_vendas/src/features/customers/data/customers_repository.dart';
+import 'package:zello/src/app/database/database.dart';
+import 'package:zello/src/features/customers/domain/customer_model.dart';
+import 'package:zello/src/features/customers/data/customers_repository.dart';
 
 class CustomersRepositoryImpl implements CustomersRepository {
   final Database _database;

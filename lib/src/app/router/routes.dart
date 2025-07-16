@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:organik_vendas/src/features/customers/view/customers_form_page.dart';
-import 'package:organik_vendas/src/features/customers/view/customers_page.dart';
-import 'package:organik_vendas/src/features/home/view/home_page.dart';
-import 'package:organik_vendas/src/features/main/view/main_page.dart';
-import 'package:organik_vendas/src/features/products/view/product_form_page.dart';
-import 'package:organik_vendas/src/features/products/view/products_page.dart';
-import 'package:organik_vendas/src/features/reports/view/reports_page.dart';
-import 'package:organik_vendas/src/features/sales/view/sale_form_page.dart';
-import 'package:organik_vendas/src/features/sales/view/sales_page.dart';
+import 'package:zello/src/features/customers/view/customers_form_page.dart';
+import 'package:zello/src/features/customers/view/customers_page.dart';
+import 'package:zello/src/features/home/view/home_page.dart';
+import 'package:zello/src/features/main/view/main_page.dart';
+import 'package:zello/src/features/products/view/product_form_page.dart';
+import 'package:zello/src/features/products/view/products_page.dart';
+import 'package:zello/src/features/reports/view/reports_page.dart';
+import 'package:zello/src/features/sales/view/sale_form_page.dart';
+import 'package:zello/src/features/sales/view/sales_page.dart';
 
 class Routes {
   Routes._();

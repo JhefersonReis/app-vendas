@@ -2,9 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:organik_vendas/src/features/sales/controller/sales_controller.dart';
-import 'package:organik_vendas/src/features/sales/domain/sale_model.dart';
-import 'package:organik_vendas/src/features/sales/domain/sales_service.dart';
+import 'package:zello/src/features/sales/controller/sales_controller.dart';
+import 'package:zello/src/features/sales/domain/sale_model.dart';
+import 'package:zello/src/features/sales/domain/sales_service.dart';
 
 import 'sales_controller_test.mocks.dart';
 

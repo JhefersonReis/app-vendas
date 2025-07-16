@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
-import 'package:organik_vendas/src/app/database/converters/item_converter.dart';
-import 'package:organik_vendas/src/app/database/tables/customers_table.dart';
+import 'package:zello/src/app/database/converters/item_converter.dart';
+import 'package:zello/src/app/database/tables/customers_table.dart';
 
 class Sales extends Table {
   IntColumn get id => integer().autoIncrement()();

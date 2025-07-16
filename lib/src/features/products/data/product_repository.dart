@@ -1,4 +1,4 @@
-import 'package:organik_vendas/src/features/products/domain/product_model.dart';
+import 'package:zello/src/features/products/domain/product_model.dart';
 
 abstract interface class ProductRepository {
   Future<List<ProductModel>> findAll();

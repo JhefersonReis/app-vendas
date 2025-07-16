@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:organik_vendas/l10n/app_localizations.dart';
-import 'package:organik_vendas/src/app/providers/providers.dart';
+import 'package:zello/l10n/app_localizations.dart';
+import 'package:zello/src/app/providers/providers.dart';
 
 class LanguageSelectorWidget extends ConsumerWidget {
   const LanguageSelectorWidget({super.key});

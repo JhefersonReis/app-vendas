@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:organik_vendas/l10n/app_localizations.dart';
-import 'package:organik_vendas/src/features/sales/controller/sales_controller.dart';
-import 'package:organik_vendas/src/features/sales/widgets/sale_empty_widget.dart';
-import 'package:organik_vendas/src/features/sales/widgets/sale_list_widget.dart';
+import 'package:zello/l10n/app_localizations.dart';
+import 'package:zello/src/features/sales/controller/sales_controller.dart';
+import 'package:zello/src/features/sales/widgets/sale_empty_widget.dart';
+import 'package:zello/src/features/sales/widgets/sale_list_widget.dart';
 
 class SalesPage extends ConsumerWidget {
   const SalesPage({super.key});

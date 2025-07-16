@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:organik_vendas/l10n/app_localizations.dart';
-import 'package:organik_vendas/src/app/helpers/toast_helper.dart';
-import 'package:organik_vendas/src/features/customers/controller/customers_controller.dart';
-import 'package:organik_vendas/src/features/products/controller/product_controller.dart';
-import 'package:organik_vendas/src/features/products/domain/product_model.dart';
-import 'package:organik_vendas/src/features/sales/controller/sales_controller.dart';
-import 'package:organik_vendas/src/features/sales/domain/item_model.dart';
-import 'package:organik_vendas/src/features/sales/domain/sale_model.dart';
-import 'package:organik_vendas/src/features/sales/widgets/sale_item_widget.dart';
+import 'package:zello/l10n/app_localizations.dart';
+import 'package:zello/src/app/helpers/toast_helper.dart';
+import 'package:zello/src/features/customers/controller/customers_controller.dart';
+import 'package:zello/src/features/products/controller/product_controller.dart';
+import 'package:zello/src/features/products/domain/product_model.dart';
+import 'package:zello/src/features/sales/controller/sales_controller.dart';
+import 'package:zello/src/features/sales/domain/item_model.dart';
+import 'package:zello/src/features/sales/domain/sale_model.dart';
+import 'package:zello/src/features/sales/widgets/sale_item_widget.dart';
 
 class SaleFormPage extends ConsumerWidget {
   final String? id;

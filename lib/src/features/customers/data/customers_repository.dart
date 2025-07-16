@@ -1,4 +1,4 @@
-import 'package:organik_vendas/src/features/customers/domain/customer_model.dart';
+import 'package:zello/src/features/customers/domain/customer_model.dart';
 
 abstract interface class CustomersRepository {
   Future<List<CustomerModel>> findAll();

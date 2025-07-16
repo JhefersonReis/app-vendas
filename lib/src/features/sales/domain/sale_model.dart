@@ -1,4 +1,4 @@
-import 'package:organik_vendas/src/features/sales/domain/item_model.dart';
+import 'package:zello/src/features/sales/domain/item_model.dart';
 
 class SaleModel {
   int id;

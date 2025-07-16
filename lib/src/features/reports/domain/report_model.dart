@@ -1,5 +1,5 @@
-import 'package:organik_vendas/src/features/reports/domain/top_customer_model.dart';
-import 'package:organik_vendas/src/features/reports/domain/top_product_model.dart';
+import 'package:zello/src/features/reports/domain/top_customer_model.dart';
+import 'package:zello/src/features/reports/domain/top_product_model.dart';
 
 class ReportData {
   final double totalRevenue;

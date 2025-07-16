@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:organik_vendas/l10n/app_localizations.dart';
-import 'package:organik_vendas/src/app/helpers/currency_helper.dart';
-import 'package:organik_vendas/src/app/helpers/toast_helper.dart';
-import 'package:organik_vendas/src/features/products/controller/product_controller.dart';
+import 'package:zello/l10n/app_localizations.dart';
+import 'package:zello/src/app/helpers/currency_helper.dart';
+import 'package:zello/src/app/helpers/toast_helper.dart';
+import 'package:zello/src/features/products/controller/product_controller.dart';
 
 class ProductFormPage extends ConsumerStatefulWidget {
   final String? id;

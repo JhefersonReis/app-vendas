@@ -1,15 +1,11 @@
-import 'package:organik_vendas/src/features/customers/domain/customer_model.dart';
+import 'package:zello/src/features/customers/domain/customer_model.dart';
 
 class TopCustomer {
   final CustomerModel customer;
   final int totalPurchases;
   final double totalSpent;
 
-  TopCustomer({
-    required this.customer,
-    required this.totalPurchases,
-    required this.totalSpent,
-  });
+  TopCustomer({required this.customer, required this.totalPurchases, required this.totalSpent});
 
   @override
   bool operator ==(Object other) {
@@ -23,8 +19,6 @@ class TopCustomer {
 
   @override
   int get hashCode {
-    return customer.hashCode ^
-        totalPurchases.hashCode ^
-        totalSpent.hashCode;
+    return customer.hashCode ^ totalPurchases.hashCode ^ totalSpent.hashCode;
   }
 }

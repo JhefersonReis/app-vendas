@@ -1,15 +1,11 @@
-import 'package:organik_vendas/src/features/products/domain/product_model.dart';
+import 'package:zello/src/features/products/domain/product_model.dart';
 
 class TopProduct {
   final ProductModel product;
   final int quantitySold;
   final double totalRevenue;
 
-  TopProduct({
-    required this.product,
-    required this.quantitySold,
-    required this.totalRevenue,
-  });
+  TopProduct({required this.product, required this.quantitySold, required this.totalRevenue});
 
   @override
   bool operator ==(Object other) {
@@ -23,8 +19,6 @@ class TopProduct {
 
   @override
   int get hashCode {
-    return product.hashCode ^
-        quantitySold.hashCode ^
-        totalRevenue.hashCode;
+    return product.hashCode ^ quantitySold.hashCode ^ totalRevenue.hashCode;
   }
 }
