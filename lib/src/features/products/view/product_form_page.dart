@@ -47,10 +47,12 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
   Future<void> _loadProduct(int id) async {
     final product = await ref.read(productByIdProvider(id).future);
 
+    if (!mounted) return;
+
     productName.text = product.name;
     productPrice.text = toCurrencyString(
       product.price.toString(),
-      leadingSymbol: 'R\$',
+      leadingSymbol: CurrencyHelper.getCurrencySymbol(context),
       useSymbolPadding: true,
       thousandSeparator: ThousandSeparator.Period,
       mantissaLength: 2,
@@ -59,6 +61,8 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
     productWeight.text = product.weight.toString();
     productWeightUnit.text = product.weightUnit;
     productDescription.text = product.description;
+
+    setState(() {});
   }
 
   Future<void> _saveProduct() async {
@@ -114,7 +118,6 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     final localization = AppLocalizations.of(context)!;
 
     return Scaffold(
@@ -127,156 +130,162 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
         backgroundColor: const Color(0xFF248f3d),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text.rich(
-              TextSpan(
-                text: localization.productName,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                children: [
-                  TextSpan(
-                    text: " *",
-                    style: TextStyle(color: Colors.red),
-                  ),
-                ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text.rich(
+                TextSpan(
+                  text: localization.productName,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  children: [
+                    TextSpan(
+                      text: " *",
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            TextField(
-              controller: productName,
-              decoration: InputDecoration(hintText: localization.enterTheProductName, border: OutlineInputBorder()),
-              onTapOutside: (_) => FocusScope.of(context).unfocus(),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text.rich(
-                        TextSpan(
-                          text: "${localization.price} (${CurrencyHelper.getCurrencySymbol(context)}) ",
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                          children: [
-                            TextSpan(
-                              text: "*",
-                              style: TextStyle(color: Colors.red),
-                            ),
-                          ],
-                        ),
-                      ),
-                      TextField(
-                        controller: productPrice,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          CurrencyInputFormatter(
-                            leadingSymbol: CurrencyHelper.getCurrencySymbol(context),
-                            useSymbolPadding: true,
-                            thousandSeparator: ThousandSeparator.Period,
-                            mantissaLength: 2,
+              TextField(
+                controller: productName,
+                decoration: InputDecoration(hintText: localization.enterTheProductName, border: OutlineInputBorder()),
+                onTapOutside: (_) => FocusScope.of(context).unfocus(),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    flex: 9,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text.rich(
+                          TextSpan(
+                            text: "${localization.price} (${CurrencyHelper.getCurrencySymbol(context)}) ",
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            children: [
+                              TextSpan(
+                                text: "*",
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ],
                           ),
-                        ],
-                        decoration: InputDecoration(
-                          hintText: '${CurrencyHelper.getCurrencySymbol(context)} 0,00',
-                          border: OutlineInputBorder(),
                         ),
-                        onTapOutside: (_) => FocusScope.of(context).unfocus(),
-                      ),
-                    ],
+                        TextField(
+                          controller: productPrice,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            CurrencyInputFormatter(
+                              leadingSymbol: CurrencyHelper.getCurrencySymbol(context),
+                              useSymbolPadding: true,
+                              thousandSeparator: ThousandSeparator.Period,
+                              mantissaLength: 2,
+                            ),
+                          ],
+                          decoration: InputDecoration(
+                            hintText: '${CurrencyHelper.getCurrencySymbol(context)} 0,00',
+                            border: OutlineInputBorder(),
+                          ),
+                          onTapOutside: (_) => FocusScope.of(context).unfocus(),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text.rich(
-                        TextSpan(
-                          text: localization.weight,
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  SizedBox(width: 16),
+                  Expanded(
+                    flex: 5,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text.rich(
+                          TextSpan(
+                            text: localization.quantity,
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            children: [
+                              TextSpan(
+                                text: " *",
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Row(
                           children: [
-                            TextSpan(
-                              text: " *",
-                              style: TextStyle(color: Colors.red),
+                            Expanded(
+                              flex: 3,
+                              child: TextField(
+                                controller: productWeight,
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(hintText: '0', border: OutlineInputBorder()),
+                                onTapOutside: (_) => FocusScope.of(context).unfocus(),
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            Expanded(
+                              flex: 3,
+                              child: DropdownButtonFormField<String>(
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                                  isDense: true,
+                                ),
+                                value: productWeightUnit.text,
+                                items: const [
+                                  DropdownMenuItem(value: 'g', child: Text('g')),
+                                  DropdownMenuItem(value: 'kg', child: Text('kg')),
+                                  DropdownMenuItem(value: 'un', child: Text('un')),
+                                ],
+                                onChanged: (value) {
+                                  productWeightUnit.text = value!;
+                                },
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                      TextField(
-                        controller: productWeight,
-                        decoration: const InputDecoration(hintText: '0', border: OutlineInputBorder()),
-                        onTapOutside: (_) => FocusScope.of(context).unfocus(),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: size.height * 0.0285),
-                      DropdownButtonFormField<String>(
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                          isDense: true,
-                        ),
-                        value: productWeightUnit.text,
-                        items: const [
-                          DropdownMenuItem(value: 'g', child: Text('g')),
-                          DropdownMenuItem(value: 'kg', child: Text('kg')),
-                        ],
-                        onChanged: (value) {
-                          productWeightUnit.text = value!;
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Text.rich(
-              TextSpan(
-                text: localization.description,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                children: [TextSpan(text: " (${localization.optional})", style: TextStyle(fontSize: 12))],
-              ),
-            ),
-            TextField(
-              controller: productDescription,
-              decoration: InputDecoration(hintText: localization.productNote, border: OutlineInputBorder()),
-              maxLines: 3,
-              onTapOutside: (_) => FocusScope.of(context).unfocus(),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF248f3d),
-                minimumSize: const Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              ),
-              onPressed: _saveProduct,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.save, color: Colors.white),
-                  const SizedBox(width: 8),
-                  Text(
-                    widget.id == null ? localization.createProduct : localization.updateProduct,
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      ],
+                    ),
                   ),
                 ],
               ),
-            ),
-          ],
+              const SizedBox(height: 16),
+              Text.rich(
+                TextSpan(
+                  text: localization.description,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  children: [TextSpan(text: " (${localization.optional})", style: TextStyle(fontSize: 12))],
+                ),
+              ),
+              TextField(
+                controller: productDescription,
+                decoration: InputDecoration(hintText: localization.productNote, border: OutlineInputBorder()),
+                maxLines: 3,
+                onTapOutside: (_) => FocusScope.of(context).unfocus(),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF248f3d),
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+                onPressed: _saveProduct,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.save, color: Colors.white),
+                    const SizedBox(width: 8),
+                    Text(
+                      widget.id == null ? localization.createProduct : localization.updateProduct,
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

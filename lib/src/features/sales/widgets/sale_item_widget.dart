@@ -21,7 +21,7 @@ class SaleItemWidget extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                '${item.productName} - ${item.weightUnit == 'g' ? item.weight.toStringAsFixed(0) : item.weight.toStringAsFixed(1)}${item.weightUnit}',
+                '${item.productName} - ${item.weightUnit == 'g' || item.weightUnit == 'un' ? item.weight.toStringAsFixed(0) : item.weight.toStringAsFixed(1)}${item.weightUnit}',
               ),
             ),
             SizedBox(

@@ -112,121 +112,101 @@ class _CustomersFormPageState extends ConsumerState<CustomersFormPage> {
         backgroundColor: const Color(0xFF248f3d),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text.rich(
-                    TextSpan(
-                      text: localization.customerName,
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                      children: [
-                        TextSpan(
-                          text: " *",
-                          style: TextStyle(color: Colors.red),
-                        ),
-                      ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text.rich(
+                      TextSpan(
+                        text: localization.customerName,
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                        children: [
+                          TextSpan(
+                            text: " *",
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  TextField(
-                    controller: _nameController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: localization.fullName,
-                      hintStyle: TextStyle(color: Colors.grey),
+                    TextField(
+                      controller: _nameController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: localization.fullName,
+                        hintStyle: TextStyle(color: Colors.grey),
+                      ),
+                      onTapOutside: (_) => FocusScope.of(context).unfocus(),
                     ),
-                    onTapOutside: (_) => FocusScope.of(context).unfocus(),
-                  ),
-                  const SizedBox(height: 16),
-                  Text.rich(
-                    TextSpan(
-                      text: localization.phone,
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                      children: [
-                        TextSpan(
-                          text: " *",
-                          style: TextStyle(color: Colors.red),
-                        ),
-                      ],
+                    const SizedBox(height: 16),
+                    Text(localization.phone, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                    IntlPhoneField(
+                      controller: _phoneController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintStyle: TextStyle(color: Colors.grey),
+                      ),
+                      initialCountryCode: countryISOCode,
+                      keyboardType: TextInputType.phone,
+                      invalidNumberMessage: localization.invalidPhoneNumber,
+                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
+                      onCountryChanged: (value) {
+                        log(value.code);
+                        countryISOCode = value.code;
+                      },
                     ),
-                  ),
-                  IntlPhoneField(
-                    controller: _phoneController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintStyle: TextStyle(color: Colors.grey),
+                    const SizedBox(height: 8),
+                    Text(localization.fullAddress, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                    TextField(
+                      controller: _addressController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintStyle: TextStyle(color: Colors.grey),
+                      ),
+                      onTapOutside: (_) => FocusScope.of(context).unfocus(),
                     ),
-                    initialCountryCode: countryISOCode,
-                    keyboardType: TextInputType.phone,
-                    invalidNumberMessage: localization.invalidPhoneNumber,
-                    inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
-                    onCountryChanged: (value) {
-                      log(value.code);
-                      countryISOCode = value.code;
-                    },
-                  ),
-                  const SizedBox(height: 8),
-                  Text.rich(
-                    TextSpan(
-                      text: localization.fullAddress,
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                      children: [
-                        TextSpan(
-                          text: " *",
-                          style: TextStyle(color: Colors.red),
-                        ),
-                      ],
+                    const SizedBox(height: 16),
+                    Text.rich(
+                      TextSpan(
+                        text: localization.observations,
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
                     ),
-                  ),
-                  TextField(
-                    controller: _addressController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintStyle: TextStyle(color: Colors.grey),
+                    TextField(
+                      controller: _observationController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintStyle: TextStyle(color: Colors.grey),
+                      ),
+                      maxLines: 3,
+                      onTapOutside: (_) => FocusScope.of(context).unfocus(),
                     ),
-                    onTapOutside: (_) => FocusScope.of(context).unfocus(),
-                  ),
-                  const SizedBox(height: 16),
-                  Text.rich(
-                    TextSpan(
-                      text: localization.observations,
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF248f3d),
+                        minimumSize: const Size(double.infinity, 50),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      ),
+                      onPressed: _saveCustomer,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.save, color: Colors.white),
+                          const SizedBox(width: 8),
+                          Text(
+                            widget.id == null ? localization.createCustomer : localization.updateCustomer,
+                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  TextField(
-                    controller: _observationController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintStyle: TextStyle(color: Colors.grey),
-                    ),
-                    maxLines: 3,
-                    onTapOutside: (_) => FocusScope.of(context).unfocus(),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF248f3d),
-                      minimumSize: const Size(double.infinity, 50),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    ),
-                    onPressed: _saveCustomer,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.save, color: Colors.white),
-                        const SizedBox(width: 8),
-                        Text(
-                          widget.id == null ? localization.createCustomer : localization.updateCustomer,
-                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+        ),
       ),
     );
   }

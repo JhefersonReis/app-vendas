@@ -50,6 +50,7 @@ class _SaleForm extends ConsumerStatefulWidget {
 class _SaleFormState extends ConsumerState<_SaleForm> {
   final _selectedDate = TextEditingController();
   final _notesController = TextEditingController();
+  final _searchController = TextEditingController();
 
   int? _selectedCustomerId;
   List<ItemModel> _items = [];
@@ -90,7 +91,29 @@ class _SaleFormState extends ConsumerState<_SaleForm> {
 
   void _addItem(ItemModel item) {
     setState(() {
-      _items.add(item);
+      // Procura se o produto já existe na lista
+      final existingItemIndex = _items.indexWhere((existingItem) => existingItem.productId == item.productId);
+
+      if (existingItemIndex != -1) {
+        // Se o produto já existe, soma a quantidade e atualiza o preço total
+        final existingItem = _items[existingItemIndex];
+        final newQuantity = existingItem.quantity + item.quantity;
+        final newTotalPrice = existingItem.unitPrice * newQuantity;
+
+        _items[existingItemIndex] = ItemModel(
+          productId: existingItem.productId,
+          productName: existingItem.productName,
+          quantity: newQuantity,
+          unitPrice: existingItem.unitPrice,
+          totalPrice: newTotalPrice,
+          weight: existingItem.weight,
+          weightUnit: existingItem.weightUnit,
+        );
+      } else {
+        // Se o produto não existe, adiciona normalmente
+        _items.add(item);
+      }
+
       _calculateTotal();
     });
   }
@@ -190,34 +213,24 @@ class _SaleFormState extends ConsumerState<_SaleForm> {
                 ),
               ),
               customers.when(
-                data: (customerList) => DropdownButtonFormField<int>(
-                  value: _selectedCustomerId,
-                  onChanged: (value) {
+                data: (customerList) => DropdownMenu<int>(
+                  controller: _searchController,
+                  enableFilter: true,
+                  requestFocusOnTap: true,
+                  initialSelection: _selectedCustomerId,
+                  onSelected: (value) {
                     setState(() {
                       _selectedCustomerId = value;
                     });
                   },
-                  items: customerList
-                      .map(
-                        (c) => DropdownMenuItem(
-                          value: c.id,
-                          child: Text(c.name, maxLines: 1, overflow: TextOverflow.ellipsis),
-                        ),
-                      )
+                  dropdownMenuEntries: customerList
+                      .map((c) => DropdownMenuEntry<int>(value: c.id, label: c.name))
                       .toList(),
-                  decoration: InputDecoration(border: OutlineInputBorder(), hintText: localization.selectACustomer),
-                  menuMaxHeight: 200,
-                  isExpanded: true,
-                  selectedItemBuilder: (BuildContext context) {
-                    final size = MediaQuery.of(context).size;
-
-                    return customerList.map<Widget>((customer) {
-                      return Container(
-                        constraints: BoxConstraints(maxWidth: size.width * 0.8),
-                        child: Text(customer.name, maxLines: 1, overflow: TextOverflow.ellipsis),
-                      );
-                    }).toList();
-                  },
+                  textStyle: const TextStyle(overflow: TextOverflow.ellipsis),
+                  width: MediaQuery.of(context).size.width - 32,
+                  menuHeight: 200,
+                  inputDecorationTheme: InputDecorationTheme(border: OutlineInputBorder()),
+                  hintText: localization.selectACustomer,
                 ),
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (e, s) => const Center(child: Text('Erro ao carregar clientes')),
@@ -315,6 +328,7 @@ class _SaleFormState extends ConsumerState<_SaleForm> {
                   hintText: localization.saleNotes,
                   hintStyle: TextStyle(color: Colors.grey),
                 ),
+                onTapOutside: (_) => FocusScope.of(context).unfocus(),
                 maxLines: 3,
               ),
               const SizedBox(height: 16),
@@ -353,58 +367,44 @@ class _SaleFormState extends ConsumerState<_SaleForm> {
       builder: (dialogContext) => Consumer(
         builder: (context, ref, child) {
           final localization = AppLocalizations.of(dialogContext)!;
+          final size = MediaQuery.of(context).size;
 
           return AlertDialog(
             title: Text(localization.addProduct),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                DropdownButtonFormField<ProductModel>(
-                  onChanged: (value) {
-                    selectedProduct = value;
-                  },
-                  items: products
-                      .map(
-                        (product) => DropdownMenuItem(
-                          value: product,
-                          child: Row(
-                            children: [
-                              product.name.length > 25
-                                  ? Expanded(child: Text(product.name, overflow: TextOverflow.ellipsis))
-                                  : Text(product.name),
-                              Text(
-                                ' - ${product.weightUnit == 'g' ? product.weight.toStringAsFixed(0) : product.weight.toStringAsFixed(1)}${product.weightUnit}',
-                              ),
-                            ],
+            content: SizedBox(
+              width: size.width * 0.8,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  DropdownMenu<ProductModel>(
+                    enableFilter: true,
+                    requestFocusOnTap: true,
+                    onSelected: (value) {
+                      selectedProduct = value;
+                    },
+                    dropdownMenuEntries: products
+                        .map(
+                          (product) => DropdownMenuEntry<ProductModel>(
+                            value: product,
+                            label:
+                                '${product.name} - ${product.weightUnit == 'g' || product.weightUnit == 'un' ? product.weight.toStringAsFixed(0) : product.weight.toStringAsFixed(1)}${product.weightUnit}',
                           ),
-                        ),
-                      )
-                      .toList(),
-                  decoration: InputDecoration(border: OutlineInputBorder(), labelText: localization.selectAProduct),
-                  selectedItemBuilder: (BuildContext context) {
-                    final size = MediaQuery.of(context).size;
-                    final maxWidth = size.width * 0.5;
-
-                    return products.map<Widget>((product) {
-                      return Container(
-                        constraints: BoxConstraints(maxWidth: maxWidth),
-                        child: Text(
-                          product.name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                      );
-                    }).toList();
-                  },
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: quantityController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(border: OutlineInputBorder(), labelText: localization.quantity),
-                ),
-              ],
+                        )
+                        .toList(),
+                    textStyle: const TextStyle(overflow: TextOverflow.ellipsis),
+                    width: size.width * 0.7,
+                    menuHeight: 300,
+                    inputDecorationTheme: const InputDecorationTheme(border: OutlineInputBorder()),
+                    hintText: localization.selectAProduct,
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: quantityController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(border: OutlineInputBorder(), labelText: localization.quantity),
+                  ),
+                ],
+              ),
             ),
             actions: [
               TextButton(onPressed: () => Navigator.of(dialogContext).pop(), child: Text(localization.cancel)),
