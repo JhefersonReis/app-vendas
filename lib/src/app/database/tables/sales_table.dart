@@ -10,6 +10,8 @@ class Sales extends Table {
   TextColumn get items => text().map(const ItemModelConverter())();
   RealColumn get total => real()();
   BoolColumn get isPaid => boolean()();
+  BoolColumn get isInstallment => boolean().withDefault(const Constant(false))();
+  IntColumn get installments => integer().withDefault(const Constant(0))();
   TextColumn get observation => text().nullable()();
   DateTimeColumn get createdAt => dateTime()();
 }

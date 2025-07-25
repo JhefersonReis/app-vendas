@@ -340,4 +340,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get empty => 'Empty';
+
+  @override
+  String get installment => 'Installment';
+
+  @override
+  String get installmentSale => 'Installment sale';
+
+  @override
+  String get numberOfInstallments => 'Number of installment';
+
+  @override
+  String get dueDate => 'Due date';
 }

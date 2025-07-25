@@ -760,6 +760,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Empty'**
   String get empty;
+
+  /// No description provided for @installment.
+  ///
+  /// In en, this message translates to:
+  /// **'Installment'**
+  String get installment;
+
+  /// No description provided for @installmentSale.
+  ///
+  /// In en, this message translates to:
+  /// **'Installment sale'**
+  String get installmentSale;
+
+  /// No description provided for @numberOfInstallments.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of installment'**
+  String get numberOfInstallments;
+
+  /// No description provided for @dueDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Due date'**
+  String get dueDate;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

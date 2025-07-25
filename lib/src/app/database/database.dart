@@ -8,11 +8,12 @@ import 'package:path_provider/path_provider.dart';
 
 import 'tables/customers_table.dart';
 import 'tables/products_table.dart';
+import 'tables/installments_table.dart';
 import 'tables/sales_table.dart';
 
 part 'database.g.dart';
 
-@DriftDatabase(tables: [Customers, Products, Sales])
+@DriftDatabase(tables: [Customers, Products, Sales, Installments])
 class Database extends _$Database {
   Database() : super(_openConnection());
 

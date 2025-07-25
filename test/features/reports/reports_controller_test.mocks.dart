@@ -24,7 +24,8 @@ import 'package:zello/src/features/reports/domain/reports_service.dart' as _i3;
 // ignore_for_file: subtype_of_sealed_class
 
 class _FakeReportData_0 extends _i1.SmartFake implements _i2.ReportData {
-  _FakeReportData_0(Object parent, Invocation parentInvocation) : super(parent, parentInvocation);
+  _FakeReportData_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 /// A class which mocks [ReportsService].
@@ -36,11 +37,17 @@ class MockReportsService extends _i1.Mock implements _i3.ReportsService {
   }
 
   @override
-  _i4.Future<_i2.ReportData> getReportData(DateTime? startDate, DateTime? endDate) =>
+  _i4.Future<_i2.ReportData> getReportData(
+    DateTime? startDate,
+    DateTime? endDate,
+  ) =>
       (super.noSuchMethod(
             Invocation.method(#getReportData, [startDate, endDate]),
             returnValue: _i4.Future<_i2.ReportData>.value(
-              _FakeReportData_0(this, Invocation.method(#getReportData, [startDate, endDate])),
+              _FakeReportData_0(
+                this,
+                Invocation.method(#getReportData, [startDate, endDate]),
+              ),
             ),
           )
           as _i4.Future<_i2.ReportData>);

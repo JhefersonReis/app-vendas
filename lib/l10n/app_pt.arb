@@ -111,5 +111,9 @@
   "productPriceIsRequired": "Preço do produto é obrigatório",
   "productWeightIsRequired": "Peso do produto é obrigatório",
   "customerNameIsRequired": "Nome do cliente é obrigatório",
-  "empty": "Vazio"
+  "empty": "Vazio",
+  "installment": "Parcela",
+  "installmentSale": "Venda parcelada",
+  "numberOfInstallments": "Numero de parcelas",
+  "dueDate": "Vencimento"
 }

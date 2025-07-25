@@ -340,4 +340,16 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get empty => 'Vazio';
+
+  @override
+  String get installment => 'Parcela';
+
+  @override
+  String get installmentSale => 'Venda parcelada';
+
+  @override
+  String get numberOfInstallments => 'Numero de parcelas';
+
+  @override
+  String get dueDate => 'Vencimento';
 }

@@ -111,5 +111,9 @@
   "productPriceIsRequired": "Product price is required",
   "productWeightIsRequired": "Product weight is required",
   "customerNameIsRequired": "Customer name is required",
-  "empty": "Empty"
+  "empty": "Empty",
+  "installment": "Installment",
+  "installmentSale": "Installment sale",
+  "numberOfInstallments": "Number of installment",
+  "dueDate": "Due date"
 }

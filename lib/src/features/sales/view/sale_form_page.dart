@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:zello/l10n/app_localizations.dart';
+import 'package:zello/src/app/helpers/currency_helper.dart';
 import 'package:zello/src/app/helpers/toast_helper.dart';
 import 'package:zello/src/features/customers/controller/customers_controller.dart';
 import 'package:zello/src/features/products/controller/product_controller.dart';
 import 'package:zello/src/features/products/domain/product_model.dart';
 import 'package:zello/src/features/sales/controller/sales_controller.dart';
+import 'package:zello/src/features/sales/domain/installment_model.dart';
 import 'package:zello/src/features/sales/domain/item_model.dart';
 import 'package:zello/src/features/sales/domain/sale_model.dart';
 import 'package:zello/src/features/sales/widgets/sale_item_widget.dart';
+import 'package:zello/src/features/sales/widgets/installment_list_widget.dart';
 
 class SaleFormPage extends ConsumerWidget {
   final String? id;
@@ -52,9 +55,13 @@ class _SaleFormState extends ConsumerState<_SaleForm> {
   final _notesController = TextEditingController();
   final _searchController = TextEditingController();
 
+  final _installmentsController = TextEditingController();
+
   int? _selectedCustomerId;
   List<ItemModel> _items = [];
   bool _isPaid = false;
+  bool _isInstallment = false;
+  List<InstallmentModel> _installments = [];
   double _total = 0.0;
 
   @override
@@ -65,6 +72,11 @@ class _SaleFormState extends ConsumerState<_SaleForm> {
       _selectedCustomerId = sale.customerId;
       _items = sale.items;
       _isPaid = sale.isPaid;
+      _isInstallment = sale.isInstallment;
+      if (_isInstallment) {
+        _installments = sale.installmentList;
+        _installmentsController.text = sale.installments.toString();
+      }
       _total = sale.total;
       _selectedDate.text = DateFormat('dd/MM/yyyy').format(sale.saleDate);
       _notesController.text = sale.observation ?? '';
@@ -135,7 +147,37 @@ class _SaleFormState extends ConsumerState<_SaleForm> {
   void _calculateTotal() {
     setState(() {
       _total = _items.fold(0.0, (sum, item) => sum + item.totalPrice);
+      if (_isInstallment) {
+        _calculateInstallments();
+      }
     });
+  }
+
+  void _calculateInstallments() {
+    final installmentCount = int.tryParse(_installmentsController.text) ?? 0;
+    if (installmentCount > 0) {
+      final installmentValue = _total / installmentCount;
+      final installments = <InstallmentModel>[];
+      for (var i = 1; i <= installmentCount; i++) {
+        installments.add(
+          InstallmentModel(
+            id: 0,
+            saleId: widget.id != null ? int.parse(widget.id!) : 0,
+            installmentNumber: i,
+            value: installmentValue,
+            dueDate: DateTime.now().add(Duration(days: 30 * i)),
+            isPaid: false,
+          ),
+        );
+      }
+      setState(() {
+        _installments = installments;
+      });
+    } else {
+      setState(() {
+        _installments.clear();
+      });
+    }
   }
 
   void _saveSale() {
@@ -162,6 +204,9 @@ class _SaleFormState extends ConsumerState<_SaleForm> {
       items: _items,
       total: _total,
       isPaid: _isPaid,
+      isInstallment: _isInstallment,
+      installments: int.tryParse(_installmentsController.text) ?? 0,
+      installmentList: _installments,
       observation: _notesController.text,
       createdAt: widget.initialSale?.createdAt ?? DateTime.now(),
     );
@@ -299,26 +344,73 @@ class _SaleFormState extends ConsumerState<_SaleForm> {
                     Text("${localization.totalSale}:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                     const Spacer(),
                     Text(
-                      NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$', decimalDigits: 2).format(_total),
+                      CurrencyHelper.formatCurrency(context, _total),
                       style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF248f3d)),
                     ),
                   ],
                 ),
               ),
+              if (!_isInstallment) ...[
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Checkbox(
+                      value: _isPaid,
+                      onChanged: (value) {
+                        setState(() {
+                          _isPaid = value ?? false;
+                        });
+                      },
+                    ),
+                    Text(localization.saleAlreadyPaid),
+                  ],
+                ),
+              ],
               const SizedBox(height: 16),
               Row(
                 children: [
                   Checkbox(
-                    value: _isPaid,
+                    value: _isInstallment,
                     onChanged: (value) {
                       setState(() {
-                        _isPaid = value ?? false;
+                        _isInstallment = value ?? false;
+                        if (!_isInstallment) {
+                          _installments.clear();
+                          _installmentsController.clear();
+                        }
                       });
                     },
                   ),
-                  Text(localization.saleAlreadyPaid),
+                  Text(localization.installmentSale),
                 ],
               ),
+              if (_isInstallment) ...[
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _installmentsController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    labelText: localization.numberOfInstallments,
+                  ),
+                  onChanged: (value) {
+                    _calculateInstallments();
+                  },
+                ),
+                const SizedBox(height: 16),
+                InstallmentListWidget(
+                  installments: _installments,
+                  onInstallmentSelected: (installment) {
+                    // Calcular se todas as parcelas estão pagas
+                    final allPaid = _installments.every((i) => i.isPaid);
+
+                    setState(() {
+                      allPaid ? _isPaid = true : _isPaid = false;
+                      _installments = List.from(_installments);
+                    });
+                  },
+                ),
+              ],
               const SizedBox(height: 16),
               Text(localization.observations, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
               TextField(

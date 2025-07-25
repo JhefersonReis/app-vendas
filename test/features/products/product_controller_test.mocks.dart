@@ -24,7 +24,8 @@ import 'package:zello/src/features/products/domain/product_service.dart' as _i3;
 // ignore_for_file: subtype_of_sealed_class
 
 class _FakeProductModel_0 extends _i1.SmartFake implements _i2.ProductModel {
-  _FakeProductModel_0(Object parent, Invocation parentInvocation) : super(parent, parentInvocation);
+  _FakeProductModel_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 /// A class which mocks [ProductService].
@@ -39,7 +40,9 @@ class MockProductService extends _i1.Mock implements _i3.ProductService {
   _i4.Future<List<_i2.ProductModel>> findAll() =>
       (super.noSuchMethod(
             Invocation.method(#findAll, []),
-            returnValue: _i4.Future<List<_i2.ProductModel>>.value(<_i2.ProductModel>[]),
+            returnValue: _i4.Future<List<_i2.ProductModel>>.value(
+              <_i2.ProductModel>[],
+            ),
           )
           as _i4.Future<List<_i2.ProductModel>>);
 

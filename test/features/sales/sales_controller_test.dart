@@ -36,6 +36,10 @@ void main() {
           items: [],
           total: 10.0,
           isPaid: true,
+          isInstallment: false,
+          installments: 0,
+          installmentList: [],
+          observation: 'Test sale',
           createdAt: DateTime.now(),
         ),
       ];
@@ -61,6 +65,10 @@ void main() {
         items: [],
         total: 20.0,
         isPaid: false,
+        isInstallment: false,
+        installments: 0,
+        installmentList: [],
+        observation: 'New sale',
         createdAt: DateTime.now(),
       );
       when(mockService.findAll()).thenAnswer((_) async => []); // Initial state
@@ -89,6 +97,10 @@ void main() {
         items: [],
         total: 10.0,
         isPaid: true,
+        isInstallment: false,
+        installments: 0,
+        installmentList: [],
+        observation: 'Initial sale',
         createdAt: DateTime.now(),
       );
       final updatedSale = initialSale.copyWith(customerName: 'Updated');
@@ -119,6 +131,10 @@ void main() {
         items: [],
         total: 10.0,
         isPaid: true,
+        isInstallment: false,
+        installments: 0,
+        installmentList: [],
+        observation: 'Test sale',
         createdAt: DateTime.now(),
       );
       when(mockService.findAll()).thenAnswer((_) async => [sale]); // Initial state

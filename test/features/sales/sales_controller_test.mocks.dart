@@ -7,9 +7,9 @@ import 'dart:async' as _i5;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i6;
+import 'package:riverpod/src/internals.dart' as _i3;
 import 'package:zello/src/features/sales/domain/sale_model.dart' as _i2;
 import 'package:zello/src/features/sales/domain/sales_service.dart' as _i4;
-import 'package:riverpod/src/internals.dart' as _i3;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -26,19 +26,25 @@ import 'package:riverpod/src/internals.dart' as _i3;
 // ignore_for_file: subtype_of_sealed_class
 
 class _FakeSaleModel_0 extends _i1.SmartFake implements _i2.SaleModel {
-  _FakeSaleModel_0(Object parent, Invocation parentInvocation) : super(parent, parentInvocation);
+  _FakeSaleModel_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
-class _FakeProviderContainer_1 extends _i1.SmartFake implements _i3.ProviderContainer {
-  _FakeProviderContainer_1(Object parent, Invocation parentInvocation) : super(parent, parentInvocation);
+class _FakeProviderContainer_1 extends _i1.SmartFake
+    implements _i3.ProviderContainer {
+  _FakeProviderContainer_1(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeKeepAliveLink_2 extends _i1.SmartFake implements _i3.KeepAliveLink {
-  _FakeKeepAliveLink_2(Object parent, Invocation parentInvocation) : super(parent, parentInvocation);
+  _FakeKeepAliveLink_2(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
-class _FakeProviderSubscription_3<State1> extends _i1.SmartFake implements _i3.ProviderSubscription<State1> {
-  _FakeProviderSubscription_3(Object parent, Invocation parentInvocation) : super(parent, parentInvocation);
+class _FakeProviderSubscription_3<State1> extends _i1.SmartFake
+    implements _i3.ProviderSubscription<State1> {
+  _FakeProviderSubscription_3(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 /// A class which mocks [SalesService].
@@ -53,7 +59,9 @@ class MockSalesService extends _i1.Mock implements _i4.SalesService {
   _i5.Future<List<_i2.SaleModel>> findAll({bool? isPaid}) =>
       (super.noSuchMethod(
             Invocation.method(#findAll, [], {#isPaid: isPaid}),
-            returnValue: _i5.Future<List<_i2.SaleModel>>.value(<_i2.SaleModel>[]),
+            returnValue: _i5.Future<List<_i2.SaleModel>>.value(
+              <_i2.SaleModel>[],
+            ),
           )
           as _i5.Future<List<_i2.SaleModel>>);
 
@@ -61,7 +69,9 @@ class MockSalesService extends _i1.Mock implements _i4.SalesService {
   _i5.Future<List<_i2.SaleModel>> search(String? query) =>
       (super.noSuchMethod(
             Invocation.method(#search, [query]),
-            returnValue: _i5.Future<List<_i2.SaleModel>>.value(<_i2.SaleModel>[]),
+            returnValue: _i5.Future<List<_i2.SaleModel>>.value(
+              <_i2.SaleModel>[],
+            ),
           )
           as _i5.Future<List<_i2.SaleModel>>);
 
@@ -69,7 +79,9 @@ class MockSalesService extends _i1.Mock implements _i4.SalesService {
   _i5.Future<_i2.SaleModel> getById(int? id) =>
       (super.noSuchMethod(
             Invocation.method(#getById, [id]),
-            returnValue: _i5.Future<_i2.SaleModel>.value(_FakeSaleModel_0(this, Invocation.method(#getById, [id]))),
+            returnValue: _i5.Future<_i2.SaleModel>.value(
+              _FakeSaleModel_0(this, Invocation.method(#getById, [id])),
+            ),
           )
           as _i5.Future<_i2.SaleModel>);
 
@@ -77,7 +89,9 @@ class MockSalesService extends _i1.Mock implements _i4.SalesService {
   _i5.Future<_i2.SaleModel> create(_i2.SaleModel? sale) =>
       (super.noSuchMethod(
             Invocation.method(#create, [sale]),
-            returnValue: _i5.Future<_i2.SaleModel>.value(_FakeSaleModel_0(this, Invocation.method(#create, [sale]))),
+            returnValue: _i5.Future<_i2.SaleModel>.value(
+              _FakeSaleModel_0(this, Invocation.method(#create, [sale])),
+            ),
           )
           as _i5.Future<_i2.SaleModel>);
 
@@ -85,7 +99,9 @@ class MockSalesService extends _i1.Mock implements _i4.SalesService {
   _i5.Future<_i2.SaleModel> update(_i2.SaleModel? sale) =>
       (super.noSuchMethod(
             Invocation.method(#update, [sale]),
-            returnValue: _i5.Future<_i2.SaleModel>.value(_FakeSaleModel_0(this, Invocation.method(#update, [sale]))),
+            returnValue: _i5.Future<_i2.SaleModel>.value(
+              _FakeSaleModel_0(this, Invocation.method(#update, [sale])),
+            ),
           )
           as _i5.Future<_i2.SaleModel>);
 
@@ -102,7 +118,8 @@ class MockSalesService extends _i1.Mock implements _i4.SalesService {
 /// A class which mocks [Ref].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockRef<State extends Object?> extends _i1.Mock implements _i3.Ref<State> {
+class MockRef<State extends Object?> extends _i1.Mock
+    implements _i3.Ref<State> {
   MockRef() {
     _i1.throwOnMissingStub(this);
   }
@@ -111,7 +128,10 @@ class MockRef<State extends Object?> extends _i1.Mock implements _i3.Ref<State> 
   _i3.ProviderContainer get container =>
       (super.noSuchMethod(
             Invocation.getter(#container),
-            returnValue: _FakeProviderContainer_1(this, Invocation.getter(#container)),
+            returnValue: _FakeProviderContainer_1(
+              this,
+              Invocation.getter(#container),
+            ),
           )
           as _i3.ProviderContainer);
 
@@ -119,62 +139,97 @@ class MockRef<State extends Object?> extends _i1.Mock implements _i3.Ref<State> 
   T refresh<T>(_i3.Refreshable<T>? provider) =>
       (super.noSuchMethod(
             Invocation.method(#refresh, [provider]),
-            returnValue: _i6.dummyValue<T>(this, Invocation.method(#refresh, [provider])),
+            returnValue: _i6.dummyValue<T>(
+              this,
+              Invocation.method(#refresh, [provider]),
+            ),
           )
           as T);
 
   @override
-  void invalidate(_i3.ProviderOrFamily? provider) =>
-      super.noSuchMethod(Invocation.method(#invalidate, [provider]), returnValueForMissingStub: null);
+  void invalidate(_i3.ProviderOrFamily? provider) => super.noSuchMethod(
+    Invocation.method(#invalidate, [provider]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void notifyListeners() =>
-      super.noSuchMethod(Invocation.method(#notifyListeners, []), returnValueForMissingStub: null);
+  void notifyListeners() => super.noSuchMethod(
+    Invocation.method(#notifyListeners, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void listenSelf(void Function(State?, State)? listener, {void Function(Object, StackTrace)? onError}) => super
-      .noSuchMethod(Invocation.method(#listenSelf, [listener], {#onError: onError}), returnValueForMissingStub: null);
+  void listenSelf(
+    void Function(State?, State)? listener, {
+    void Function(Object, StackTrace)? onError,
+  }) => super.noSuchMethod(
+    Invocation.method(#listenSelf, [listener], {#onError: onError}),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void invalidateSelf() => super.noSuchMethod(Invocation.method(#invalidateSelf, []), returnValueForMissingStub: null);
+  void invalidateSelf() => super.noSuchMethod(
+    Invocation.method(#invalidateSelf, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onAddListener(void Function()? cb) =>
-      super.noSuchMethod(Invocation.method(#onAddListener, [cb]), returnValueForMissingStub: null);
+  void onAddListener(void Function()? cb) => super.noSuchMethod(
+    Invocation.method(#onAddListener, [cb]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onRemoveListener(void Function()? cb) =>
-      super.noSuchMethod(Invocation.method(#onRemoveListener, [cb]), returnValueForMissingStub: null);
+  void onRemoveListener(void Function()? cb) => super.noSuchMethod(
+    Invocation.method(#onRemoveListener, [cb]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onResume(void Function()? cb) =>
-      super.noSuchMethod(Invocation.method(#onResume, [cb]), returnValueForMissingStub: null);
+  void onResume(void Function()? cb) => super.noSuchMethod(
+    Invocation.method(#onResume, [cb]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onCancel(void Function()? cb) =>
-      super.noSuchMethod(Invocation.method(#onCancel, [cb]), returnValueForMissingStub: null);
+  void onCancel(void Function()? cb) => super.noSuchMethod(
+    Invocation.method(#onCancel, [cb]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onDispose(void Function()? cb) =>
-      super.noSuchMethod(Invocation.method(#onDispose, [cb]), returnValueForMissingStub: null);
+  void onDispose(void Function()? cb) => super.noSuchMethod(
+    Invocation.method(#onDispose, [cb]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   T read<T>(_i3.ProviderListenable<T>? provider) =>
       (super.noSuchMethod(
             Invocation.method(#read, [provider]),
-            returnValue: _i6.dummyValue<T>(this, Invocation.method(#read, [provider])),
+            returnValue: _i6.dummyValue<T>(
+              this,
+              Invocation.method(#read, [provider]),
+            ),
           )
           as T);
 
   @override
   bool exists(_i3.ProviderBase<Object?>? provider) =>
-      (super.noSuchMethod(Invocation.method(#exists, [provider]), returnValue: false) as bool);
+      (super.noSuchMethod(
+            Invocation.method(#exists, [provider]),
+            returnValue: false,
+          )
+          as bool);
 
   @override
   T watch<T>(_i3.ProviderListenable<T>? provider) =>
       (super.noSuchMethod(
             Invocation.method(#watch, [provider]),
-            returnValue: _i6.dummyValue<T>(this, Invocation.method(#watch, [provider])),
+            returnValue: _i6.dummyValue<T>(
+              this,
+              Invocation.method(#watch, [provider]),
+            ),
           )
           as T);
 
@@ -182,7 +237,10 @@ class MockRef<State extends Object?> extends _i1.Mock implements _i3.Ref<State> 
   _i3.KeepAliveLink keepAlive() =>
       (super.noSuchMethod(
             Invocation.method(#keepAlive, []),
-            returnValue: _FakeKeepAliveLink_2(this, Invocation.method(#keepAlive, [])),
+            returnValue: _FakeKeepAliveLink_2(
+              this,
+              Invocation.method(#keepAlive, []),
+            ),
           )
           as _i3.KeepAliveLink);
 
@@ -194,10 +252,18 @@ class MockRef<State extends Object?> extends _i1.Mock implements _i3.Ref<State> 
     bool? fireImmediately,
   }) =>
       (super.noSuchMethod(
-            Invocation.method(#listen, [provider, listener], {#onError: onError, #fireImmediately: fireImmediately}),
+            Invocation.method(
+              #listen,
+              [provider, listener],
+              {#onError: onError, #fireImmediately: fireImmediately},
+            ),
             returnValue: _FakeProviderSubscription_3<T>(
               this,
-              Invocation.method(#listen, [provider, listener], {#onError: onError, #fireImmediately: fireImmediately}),
+              Invocation.method(
+                #listen,
+                [provider, listener],
+                {#onError: onError, #fireImmediately: fireImmediately},
+              ),
             ),
           )
           as _i3.ProviderSubscription<T>);

@@ -7,7 +7,8 @@ import 'dart:async' as _i4;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:zello/src/features/customers/domain/customer_model.dart' as _i2;
-import 'package:zello/src/features/customers/domain/customers_service.dart' as _i3;
+import 'package:zello/src/features/customers/domain/customers_service.dart'
+    as _i3;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -24,7 +25,8 @@ import 'package:zello/src/features/customers/domain/customers_service.dart' as _
 // ignore_for_file: subtype_of_sealed_class
 
 class _FakeCustomerModel_0 extends _i1.SmartFake implements _i2.CustomerModel {
-  _FakeCustomerModel_0(Object parent, Invocation parentInvocation) : super(parent, parentInvocation);
+  _FakeCustomerModel_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 /// A class which mocks [CustomersService].
@@ -39,7 +41,9 @@ class MockCustomersService extends _i1.Mock implements _i3.CustomersService {
   _i4.Future<List<_i2.CustomerModel>> findAll() =>
       (super.noSuchMethod(
             Invocation.method(#findAll, []),
-            returnValue: _i4.Future<List<_i2.CustomerModel>>.value(<_i2.CustomerModel>[]),
+            returnValue: _i4.Future<List<_i2.CustomerModel>>.value(
+              <_i2.CustomerModel>[],
+            ),
           )
           as _i4.Future<List<_i2.CustomerModel>>);
 
